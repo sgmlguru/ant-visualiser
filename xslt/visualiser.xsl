@@ -12,19 +12,23 @@
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
     
     <xsl:param name="initial-target" select="$default" as="xs:string?"/>
-    
     <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
     
     <xsl:variable name="base-uri" select="base-uri(/)"/>
     <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
     <xsl:variable name="base-path" select="substring-before($base-uri, $filename)"/>
     
+    
     <xsl:template match="/*">
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.1">
+                <!-- First target (as provided by $initial-target) -->
                 <node TEXT="{$filename || ' - ' || @name}">
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
+                    
+                    <!-- Taskdefs, xmlproperties -->
+                    <xsl:apply-templates select="taskdef | xmlproperty"/>
                     
                     <xsl:apply-templates select="target[@name = $initial-target]">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
@@ -41,6 +45,13 @@
     
     <xsl:template match="xmlproperty">
         <node TEXT="{name(.) || ' - ' || @file}">
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <xsl:template match="taskdef">
+        <node TEXT="{name(.) || ' - ' || @resource}">
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
