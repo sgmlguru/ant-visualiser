@@ -13,19 +13,29 @@
     
     <xsl:param name="initial-target" select="$default" as="xs:string?"/>
     
+    <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
+    
     <xsl:variable name="base-uri" select="base-uri(/)"/>
     <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
     <xsl:variable name="base-path" select="substring-before($base-uri, $filename)"/>
     
-    
     <xsl:template match="/*">
-        <map>
-            <node TEXT="{$filename || ' - ' || @name}">
-                <xsl:apply-templates select="target[@name = $initial-target]">
-                    <xsl:with-param name="context" select="." tunnel="yes"/>
-                </xsl:apply-templates>
-            </node>
-        </map>
+        <xsl:variable name="mm" as="element()">
+            <map version="freeplane 1.12.1">
+                <node TEXT="{$filename || ' - ' || @name}">
+                    <!-- Style -->
+                    <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
+                    
+                    <xsl:apply-templates select="target[@name = $initial-target]">
+                        <xsl:with-param name="context" select="." tunnel="yes"/>
+                    </xsl:apply-templates>
+                </node>
+            </map>
+        </xsl:variable>
+        
+        <xsl:result-document href="{$mm-targetpath || replace($filename, '\.xml', '.mm')}">
+            <xsl:copy-of select="$mm"/>
+        </xsl:result-document>
     </xsl:template>
     
     
@@ -43,6 +53,7 @@
         <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
         
         <node TEXT="{name(.) || ' - ' || $target || $default-label}">
+            <xsl:apply-templates select="@description"/>
             <xsl:for-each select="$depends">
                 <xsl:variable name="current-target" select="."/>
                 <xsl:apply-templates select="$context//target[@name = $current-target]">
@@ -53,6 +64,19 @@
                 <xsl:with-param name="target" select="$target" tunnel="yes"/>
             </xsl:apply-templates>
         </node>
+    </xsl:template>
+    
+    
+    <xsl:template match="@description">
+        <richcontent TYPE="NOTE">
+            <html>
+                <head>
+                    
+                </head>
+                <body>
+                    <p>{.}</p>
+                </body>
+            </html></richcontent>
     </xsl:template>
     
     
