@@ -25,6 +25,9 @@
     <xsl:template match="/*">
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.1">
+                <bookmarks>
+                    <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
+                </bookmarks>
                 <!-- First target (as provided by $initial-target) -->
                 <node TEXT="{$filename || ' - ' || @name}">
                     <!-- Style -->
