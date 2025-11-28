@@ -14,6 +14,9 @@
     <xsl:param name="initial-target" select="$default" as="xs:string?"/>
     <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
     
+    <xsl:param name="taskdef-colour" select="'#3333ff'"/>
+    <xsl:param name="xmlproperty-colour" select="'#666600'"/>
+    
     <xsl:variable name="base-uri" select="base-uri(/)"/>
     <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
     <xsl:variable name="base-path" select="substring-before($base-uri, $filename)"/>
@@ -44,14 +47,14 @@
     
     
     <xsl:template match="xmlproperty">
-        <node TEXT="{name(.) || ' - ' || @file}">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$xmlproperty-colour}">
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
     
     
     <xsl:template match="taskdef">
-        <node TEXT="{name(.) || ' - ' || @resource}">
+        <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$taskdef-colour}">
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
