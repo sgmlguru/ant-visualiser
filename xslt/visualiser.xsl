@@ -3,11 +3,15 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
+    xmlns:sg="urn:x-sgmlguru:ns:xslt"
     expand-text="yes"
     exclude-result-prefixes="#all"
     version="3.0">
     
     <xsl:output method="xml" indent="yes"/>
+    
+    <xsl:import href="functions.xsl"/>
+    
     
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
     
@@ -21,10 +25,27 @@
     <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
     <xsl:variable name="base-path" select="substring-before($base-uri, $filename)"/>
     
+    <xsl:variable name="context" select="/"/>
+    
+    <!-- All property files go here for now -->
+    <xsl:variable name="property-files">
+        <xmlproperty-files>
+            <xsl:for-each select="$context//xmlproperty">
+                <xsl:variable name="current" select="$base-path || @file"/>
+                <xsl:if test="doc-available($current)">
+                    <xsl:copy-of select="doc($current)"/>
+                </xsl:if>
+            </xsl:for-each>
+        </xmlproperty-files>
+    </xsl:variable>
+    
+    
     
     <xsl:template match="/*">
+        <!--<xsl:message>XML properties? {sg:xmlproperties-exist($context)}</xsl:message>-->
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.1">
+                <!--<xsl:copy-of select="$property-files"></xsl:copy-of>-->
                 <bookmarks>
                     <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
                 </bookmarks>
@@ -43,9 +64,9 @@
             </map>
         </xsl:variable>
         
-        <xsl:result-document href="{$mm-targetpath || replace($filename, '\.xml', '.mm')}">
+        <!--<xsl:result-document href="{$mm-targetpath || replace($filename, '\.xml', '.mm')}">-->
             <xsl:copy-of select="$mm"/>
-        </xsl:result-document>
+        <!--</xsl:result-document>-->
     </xsl:template>
     
     
@@ -99,7 +120,11 @@
     
     <xsl:template match="ant[ancestor::target]">
         <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}">
-            <xsl:apply-templates select="node()"/>
+            <!--<xsl:apply-templates select="node()"/>-->
+            <debug>
+                <!--<xsl:value-of select="sg:parse-property($context, @dir)"/>-->
+                <xsl:copy-of select="analyze-string(@dir, '\$\{([^\}]+)*\}')"/>
+            </debug>
         </node>
     </xsl:template>
     
