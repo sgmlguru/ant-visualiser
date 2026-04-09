@@ -3,6 +3,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions"
     xmlns:sg="urn:x-sgmlguru:ns:xslt"
     expand-text="yes"
     exclude-result-prefixes="#all"
@@ -61,6 +62,8 @@
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
                 </node>
+                
+                <xsl:copy-of select="$property-files"></xsl:copy-of>
             </map>
         </xsl:variable>
         
@@ -120,10 +123,8 @@
     
     <xsl:template match="ant[ancestor::target]">
         <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}">
-            <!--<xsl:apply-templates select="node()"/>-->
             <debug>
-                <!--<xsl:value-of select="sg:parse-property($context, @dir)"/>-->
-                <xsl:copy-of select="analyze-string(@dir, '\$\{([^\}]+)*\}')"/>
+                <xsl:sequence select="sg:parse-property(@dir, $property-files)"/>
             </debug>
         </node>
     </xsl:template>
