@@ -5,13 +5,12 @@
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:fn="http://www.w3.org/2005/xpath-functions"
     xmlns:sg="urn:x-sgmlguru:ns:xslt"
+    default-mode="props"
     expand-text="yes"
     exclude-result-prefixes="#all"
     version="3.0">
     
     <xsl:output method="xml" indent="yes"/>
-    
-    <xsl:include href="functions.xsl"/>
     
     
     <xsl:template match="xmlproperty-files">
