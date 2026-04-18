@@ -13,6 +13,9 @@
     
     <xsl:import href="functions.xsl"/>
     
+    <!-- XML property normalisation -->
+    <xsl:include href="normalise-xmlproperties.xsl"/>
+    
     
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
     
@@ -41,12 +44,14 @@
     </xsl:variable>
     
     
+    <xsl:variable name="norm">
+        <xsl:apply-templates select="$property-files" mode="props"/>
+    </xsl:variable>
+    
     
     <xsl:template match="/*">
-        <!--<xsl:message>XML properties? {sg:xmlproperties-exist($context)}</xsl:message>-->
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.1">
-                <!--<xsl:copy-of select="$property-files"></xsl:copy-of>-->
                 <bookmarks>
                     <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
                 </bookmarks>
@@ -63,7 +68,7 @@
                     </xsl:apply-templates>
                 </node>
                 
-                <xsl:copy-of select="$property-files"></xsl:copy-of>
+                <xsl:copy-of select="$norm"/>
             </map>
         </xsl:variable>
         
@@ -123,9 +128,9 @@
     
     <xsl:template match="ant[ancestor::target]">
         <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}">
-            <debug>
+            <!--<debug>
                 <xsl:sequence select="sg:parse-property(@dir, $property-files)"/>
-            </debug>
+            </debug>-->
         </node>
     </xsl:template>
     
