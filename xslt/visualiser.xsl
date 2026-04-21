@@ -23,6 +23,7 @@
     <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
     
     <xsl:param name="taskdef-colour" select="'#666600'"/>
+    <xsl:param name="import-colour" select="'#678900'"/>
     <xsl:param name="xmlproperty-colour" select="'#3333ff'"/>
     
     <xsl:variable name="base-uri" select="base-uri(/)"/>
@@ -44,7 +45,7 @@
     </xsl:variable>
     
     
-    <xsl:variable name="norm">
+    <xsl:variable name="normalised">
         <xsl:apply-templates select="$property-files" mode="props"/>
     </xsl:variable>
     
@@ -60,15 +61,15 @@
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
-                    <!-- Taskdefs, xmlproperties -->
-                    <xsl:apply-templates select="taskdef | xmlproperty"/>
+                    <!-- Taskdefs, imports, xmlproperties -->
+                    <xsl:apply-templates select="taskdef | import | xmlproperty"/>
                     
                     <xsl:apply-templates select="target[@name = $initial-target]">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
                 </node>
                 
-                <xsl:copy-of select="$norm"/>
+                <xsl:copy-of select="$normalised"/>
             </map>
         </xsl:variable>
         
@@ -88,6 +89,13 @@
     <xsl:template match="taskdef">
         <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$taskdef-colour}">
             <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <xsl:template match="import">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$import-colour}">
+            <xsl:copy-of select="sg:resolve-string(@file, $normalised)"/>
         </node>
     </xsl:template>
     

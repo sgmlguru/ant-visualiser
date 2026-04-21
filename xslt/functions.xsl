@@ -47,12 +47,34 @@
     </xsl:function>
     
     
-    <xsl:function name="sg:get-path">
+    <xsl:function name="sg:resolve-string">
         <xsl:param name="string"/>
-        <xsl:variable name="tokenised-string" select="fn:tokenize($string, '\.')"/>
+        <xsl:param name="properties"/>
         
-        <!-- Never mind this; we'll replace it with actual functionality -->
-        <xsl:sequence select="$tokenised-string"/>
+        <xsl:variable name="tokenised" select="analyze-string($string, '\$\{[^}]+\}')" as="element()"/>
+        
+        <xsl:variable name="resolve">
+            <xsl:for-each select="$tokenised/*">
+                <xsl:choose>
+                    <xsl:when test="local-name(.) = 'match'">
+                        <xsl:variable name="str" select="."/>
+                        <xsl:value-of select="$properties//property[@path = sg:get-property-name($str)][1]/@value"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+        </xsl:variable>
+        
+        <xsl:copy-of select="$resolve"/>
+    </xsl:function>
+    
+    
+    <xsl:function name="sg:get-property-name">
+        <xsl:param name="string" as="xs:string"/>
+        
+        <xsl:value-of select="translate($string, '${}', '')"/>
     </xsl:function>
     
 </xsl:stylesheet>
