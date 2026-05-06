@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project	
+    basedir="."
+    name="first" 
+    default="test">
+    
+    
+    <echo message="Importing xmlproperty files main1 followed by main2"/>
+    
+    <!-- Project properties -->
+    <xmlproperty
+        file="main1.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    <xmlproperty
+        file="main2.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    <echo message="[main build] repo.sub is defined in main1: ${repo.sub}"/>
+    <echo message="[main build] Importing build_sub via repo.sub"/>
+    
+    <import file="${repo.sub}"/>
+    
+    <!-- Test xmlproperties precedence -->
+    <echo message="[main build] base.dir is defined in main1 and main2: ${base.dir}"/>
+    
+    <xmlproperty
+        file="main4.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    <!-- This is defined in properties3.xml (build_sub) and properties4.xml (above) -->
+    <echo message="[main build] Resolving sub.test defined in sub build (sub3) and main build (main4): ${sub.test}"/>
+    
+    <echo message="[main build] Resolving main.test from main4: ${main.test}"/>
+    
+    <echo message="[main build] Now running target 'test' that depends on target 'echo' in build_sub"/>
+    
+    <target
+        name="test"
+        description="Just a depend to the sub build followed by an echo that runs last"
+        depends="echo">
+        <echo>[main build] This runs last</echo>
+    </target>
+    
+</project>

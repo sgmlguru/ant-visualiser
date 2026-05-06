@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project	
+    basedir="."
+    name="sub">
+    
+    <echo message="[build_sub] Importing xmlproperty file sub3"/>
+    
+    <!-- Project properties -->
+    <xmlproperty
+        file="sub3.xml"
+        keeproot="false"
+        collapseattributes="true"
+        semanticattributes="true"/>
+    
+    
+    <target name="echo" description="Just a Hello World echo">
+        <echo message="[build_sub] Hello world"/>
+        
+        <!-- /home/sub3 -->
+        <echo message="[build_sub] base.dir: ${base.dir}"/>
+        
+        <!-- /home/me/docs/somewhere -->
+        <echo message="[build_sub] path.to.dir: ${path.to.dir}"/>
+    </target>
+    
+</project>
