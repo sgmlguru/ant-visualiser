@@ -11,16 +11,18 @@
     
     <xsl:output method="xml" indent="yes"/>
     
+    <!-- Functions -->
     <xsl:import href="functions.xsl"/>
     
     <!-- XML property normalisation -->
     <xsl:include href="normalise-xmlproperties.xsl"/>
     
-    
+    <!-- Default target for build -->
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
     
     
     <xsl:param name="env.date" select="'20260506155549'" as="xs:string?"/>
+    <xsl:param name="current.time" select="'194350'" as="xs:string?"/>
     
     <xsl:param name="initial-target" select="$default" as="xs:string?"/>
     <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
@@ -80,14 +82,12 @@
                 <bookmarks>
                     <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
                 </bookmarks>
-                <!-- First target (as provided by $initial-target) -->
+                <!-- Build file root -->
                 <node TEXT="{$filename || ' - ' || @name}">
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
-                    <xsl:apply-templates select="taskdef | import | xmlproperty | property"/>
-                    
-                    <xsl:apply-templates select="target[@name = $initial-target]">
+                    <xsl:apply-templates select="taskdef | import | xmlproperty | property | target">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
                 </node>
@@ -123,10 +123,9 @@
     <xsl:template match="import">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$import-colour}">
             <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
-            <!-- Ideally we'd need to inject the source document's normalised properties here
-                 so we can add to it -->
-            <xsl:copy-of select="sg:resolve-string(@file, $normalised)"/>
-            <!-- Do doc(@file) and look for further properties. -->
+            
+            <!-- We import project files, so we need to look at the project element's children -->
+            <xsl:apply-templates select="doc(sg:resolve-string(@file, $normalised))/*/*"/>
         </node>
     </xsl:template>
     
