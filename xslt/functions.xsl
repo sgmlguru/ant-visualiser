@@ -9,33 +9,6 @@
     version="3.0">
     
     
-    <xsl:function name="sg:xmlproperties-exist">
-        <xsl:param name="context"/>
-        
-        <xsl:choose>
-            <xsl:when test="exists($context//xmlproperty)">
-                <xsl:value-of select="true()"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="false()"/>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:function>
-    
-    
-    <xsl:function name="sg:open-property-files">
-        <xsl:param name="context"/>
-        
-        <xsl:variable name="props">
-            <xsl:for-each select="$context//xmlproperty">
-                <xsl:copy-of select="doc(@file)"/>
-            </xsl:for-each>
-        </xsl:variable>
-        
-        <xsl:copy-of select="$props"/>
-    </xsl:function>
-    
-    
     <xsl:function name="sg:parse-property">
         <xsl:param name="property-value"/>
         <!--<xsl:param name="properties"/>-->
