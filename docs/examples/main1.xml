@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <repo>
+        <dir location="/home/ari/Documents/repos/ant-visualiser/xspec/xml"/>
+        <sub location="${repo.dir}/build_sub.xml"/>
+    </repo>
+    
+    <base>
+        <dir location="/home/main1"/>
+    </base>
+    
+    <path>
+        <to location="${base.dir}/docs/main1">
+            <dir location="${path.to}/somewhere/main1"/>
+        </to>
+    </path>
+</properties>

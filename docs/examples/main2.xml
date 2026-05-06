@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <base>
+        <dir location="/home/main2"/>
+    </base>
+    
+    <path>
+        <to location="${base.dir}/docs/main2">
+            <dir location="${path.to}/somewhere/main2"/>
+        </to>
+    </path>
+</properties>
