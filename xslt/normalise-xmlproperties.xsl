@@ -67,89 +67,90 @@
     </xsl:template>
     
     
+    <!-- local properties need to be handled, too -->
+    <xsl:template match="local">
+        <xsl:variable name="name" select="@name"/>
+        <property path="{$name}" value="{$name}" done="true"/>
+    </xsl:template>
+    
+    
     <!-- Recursive template -->
     <xsl:template name="normalise-properties">
         <xsl:param name="context"/>
         
-        <!-- Read the flattened properties -->
+        <!-- Unprocessed properties -->
         <xsl:variable name="properties">
             <xsl:apply-templates select="$context//property" mode="recursive"/>
         </xsl:variable>
         
-        <!-- Iterate through properties, look up property values from previous set -->
+        <!-- Calculate resolved values -->
         <xsl:variable name="calculated">
             <root>
                 <xsl:for-each select="$properties//property">
                     <xsl:choose>
-                        <!-- env.date is an exception -->
                         <xsl:when test="@path = 'env.date'">
-                            <property path="env.date" value="ENV-DATE" done="true"/>
+                            <property path="env.date" value="{$env.date}" done="true"/>
                         </xsl:when>
                         
-                        <!-- Just copy if there are no more properties to resolve in the value -->
                         <xsl:when test="@done=true()">
                             <xsl:copy-of select="."/>
                         </xsl:when>
                         
-                        <!-- If there are properties to resolve -->
                         <xsl:otherwise>
-                            <xsl:copy>
-                                <xsl:copy-of select="@path"/>
-                                
-                                <!-- This only does file paths now; needs to be tweaked to do any property combo -->
-                                <xsl:variable name="new-value">
-                                    <xsl:for-each select="fn:tokenize(@value, '/')">
-                                        <xsl:choose>
-                                            
-                                            <!-- There are unresolved properties left -->
-                                            <xsl:when test="contains(., '$')">
-                                                <xsl:variable name="prop" select="replace(., '\$\{([^\}]+)\}', '$1')"/>
-                                                
+                            <!-- @path needs to have a value, otherwise it's an artefact
+                                 from local property handling -->
+                            
+                            <xsl:if test="@path = ''">
+                                <xsl:message>Empty @path, @value="{@value}", @done="{@done}"</xsl:message>
+                            </xsl:if>
+                            
+                            <xsl:if test="@path != ''">
+                                <xsl:copy>
+                                    <xsl:copy-of select="@path"/>
+                                    
+                                    <xsl:variable name="current-val" select="@value"/>
+                                    
+                                    <!-- @regex *hates* this, so just define it as a variable -->
+                                    <xsl:variable name="property-regex" select="'\$\{([^}]+)\}'" as="xs:string"/>
+                                    
+                                    <xsl:variable name="new-value">
+                                        <xsl:analyze-string select="$current-val" regex="{$property-regex}">
+                                            <xsl:matching-substring>
+                                                <xsl:variable name="prop" select="regex-group(1)"/>
                                                 <xsl:choose>
-                                                    <xsl:when test="$prop = '${current.time}'">
-                                                        <xsl:value-of select="'CURRENT-TIME'"/>
+                                                    <xsl:when test="$prop = 'current.time'">
+                                                        <xsl:value-of select="$current.time"/>
+                                                    </xsl:when>
+                                                    <xsl:when test="$prop = 'env.date'">
+                                                        <xsl:value-of select="$env.date"/>
                                                     </xsl:when>
                                                     
-                                                    <!-- Look up resolved valuea -->
                                                     <xsl:when test="exists($properties//property[@done=true() and @path=$prop][1]/@value)">
-                                                        <xsl:value-of
-                                                            select="$properties//property[@done=true() and @path=$prop][1]/@value"/>
+                                                        <xsl:value-of select="$properties//property[@done=true() and @path=$prop][1]/@value"/>
                                                     </xsl:when>
                                                     
-                                                    <!-- Or just copy for next iteration -->
                                                     <xsl:otherwise>
-                                                        <xsl:value-of select="."/>
+                                                        <xsl:value-of select="concat('${', $prop, '}')"/>
                                                     </xsl:otherwise>
                                                 </xsl:choose>
-                                            </xsl:when>
-                                            <xsl:otherwise>
+                                            </xsl:matching-substring>
+                                            <xsl:non-matching-substring>
                                                 <xsl:value-of select="."/>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                        
-                                        <xsl:if test="position() != last()">
-                                            <xsl:value-of select="'/'"/>
-                                        </xsl:if>
-                                    </xsl:for-each>
-                                </xsl:variable>
-                                
-                                <!-- New value -->
-                                <xsl:attribute
-                                    name="value"
-                                    select="$new-value"/>
-                                
-                                <!-- Is the new value fully resolved? -->
-                                <xsl:attribute
-                                    name="done"
-                                    select="if (contains($new-value, '$')) then (false()) else (true())"/>
-                            </xsl:copy>
+                                            </xsl:non-matching-substring>
+                                        </xsl:analyze-string>
+                                    </xsl:variable>
+                                    
+                                    <xsl:attribute name="value" select="$new-value"/>
+                                    
+                                    <xsl:attribute name="done" select="if (contains($new-value, '$')) then (false()) else (true())"/>
+                                </xsl:copy>
+                            </xsl:if>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:for-each>
             </root>
         </xsl:variable>
         
-        <!-- Output -->
         <xsl:choose>
             <!-- Still unresolved properties left, so recurse -->
             <xsl:when test="exists($calculated//property[@done = false()])">
@@ -158,11 +159,26 @@
                 </xsl:call-template>
             </xsl:when>
             
-            <!-- Yippe, no unresolved properties -->
+            <!-- Yippee, no unresolved properties -->
             <xsl:otherwise>
                 <xsl:copy-of select="$calculated"/>
             </xsl:otherwise>
         </xsl:choose>
+        
+        <!--<xsl:variable name="old-unresolved" select="count($context//property[@done = false()])"/>
+        <xsl:variable name="new-unresolved" select="count($calculated//property[@done = false()])"/>
+        
+        <xsl:choose>
+            <xsl:when test="$new-unresolved &gt; 0 and $new-unresolved &lt; $old-unresolved">
+                <xsl:call-template name="normalise-properties">
+                    <xsl:with-param name="context" select="$calculated"/>
+                </xsl:call-template>
+            </xsl:when>
+            
+            <xsl:otherwise>
+                <xsl:copy-of select="$calculated"/>
+            </xsl:otherwise>
+        </xsl:choose>-->
     </xsl:template>
     
     

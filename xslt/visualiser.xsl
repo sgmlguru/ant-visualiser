@@ -11,13 +11,18 @@
     
     <xsl:output method="xml" indent="yes"/>
     
+    <!-- Functions -->
     <xsl:import href="functions.xsl"/>
     
     <!-- XML property normalisation -->
     <xsl:include href="normalise-xmlproperties.xsl"/>
     
-    
+    <!-- Default target for build -->
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
+    
+    
+    <xsl:param name="env.date" select="'20260506155549'" as="xs:string?"/>
+    <xsl:param name="current.time" select="'194350'" as="xs:string?"/>
     
     <xsl:param name="initial-target" select="$default" as="xs:string?"/>
     <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
@@ -25,6 +30,7 @@
     <xsl:param name="taskdef-colour" select="'#666600'"/>
     <xsl:param name="import-colour" select="'#678900'"/>
     <xsl:param name="xmlproperty-colour" select="'#3333ff'"/>
+    <xsl:param name="property-colour" select="'#999999'"/>
     
     <xsl:variable name="base-uri" select="base-uri(/)"/>
     <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
@@ -32,15 +38,34 @@
     
     <xsl:variable name="context" select="/"/>
     
-    <!-- All property files go here for now -->
-    <!-- TODO Iterate through <property> elements as well -->
+    
     <xsl:variable name="property-files">
         <xmlproperty-files>
-            <xsl:for-each select="$context//xmlproperty">
+            <xsl:variable name="all-imported-docs" select="sg:collect-properties(/, $base-path, ())"/>
+            
+            <xsl:for-each select="$all-imported-docs//xmlproperty">
                 <xsl:variable name="current" select="$base-path || @file"/>
                 <xsl:if test="doc-available($current)">
                     <xsl:copy-of select="doc($current)"/>
                 </xsl:if>
+            </xsl:for-each>
+            
+            <xsl:for-each select="$all-imported-docs//property">
+                <xsl:choose>
+                    <xsl:when test="@file">
+                        <xsl:variable name="prop-file" select="$base-path || @file"/>
+                        <xsl:if test="doc-available($prop-file)">
+                            <xsl:copy-of select="doc($prop-file)"/>
+                        </xsl:if>
+                    </xsl:when>
+                    <xsl:when test="@name and @value">
+                        <property name="{@name}" value="{@value}"/>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:for-each>
+            
+            <xsl:for-each select="$all-imported-docs//local">
+                <xsl:copy-of select="."/>
             </xsl:for-each>
         </xmlproperty-files>
     </xsl:variable>
@@ -57,15 +82,12 @@
                 <bookmarks>
                     <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
                 </bookmarks>
-                <!-- First target (as provided by $initial-target) -->
+                <!-- Build file root -->
                 <node TEXT="{$filename || ' - ' || @name}">
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
-                    <!-- Taskdefs, imports, xmlproperties -->
-                    <xsl:apply-templates select="taskdef | import | xmlproperty"/>
-                    
-                    <xsl:apply-templates select="target[@name = $initial-target]">
+                    <xsl:apply-templates select="taskdef | import | xmlproperty | property | target">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
                 </node>
@@ -79,6 +101,10 @@
         <!--</xsl:result-document>-->
     </xsl:template>
     
+    
+    <xsl:template match="property">
+        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$property-colour}"/>
+    </xsl:template>
     
     <xsl:template match="xmlproperty">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$xmlproperty-colour}">
@@ -97,10 +123,9 @@
     <xsl:template match="import">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$import-colour}">
             <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
-            <!-- Ideally we'd need to inject the source document's normalised properties here
-                 so we can add to it -->
-            <xsl:copy-of select="sg:resolve-string(@file, $normalised)"/>
-            <!-- Do doc(@file) and look for further properties. -->
+            
+            <!-- We import project files, so we need to look at the project element's children -->
+            <xsl:apply-templates select="doc(sg:resolve-string(@file, $normalised))/*/*"/>
         </node>
     </xsl:template>
     
@@ -129,9 +154,7 @@
     <xsl:template match="@description">
         <richcontent TYPE="NOTE">
             <html>
-                <head>
-                    
-                </head>
+                <head/>
                 <body>
                     <p>{.}</p>
                 </body>
@@ -140,11 +163,7 @@
     
     
     <xsl:template match="ant[ancestor::target]">
-        <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}">
-            <!--<debug>
-                <xsl:sequence select="sg:parse-property(@dir, $property-files)"/>
-            </debug>-->
-        </node>
+        <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}"/>
     </xsl:template>
     
     

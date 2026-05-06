@@ -50,4 +50,29 @@
         <xsl:value-of select="translate($string, '${}', '')"/>
     </xsl:function>
     
+    
+    <xsl:function name="sg:collect-properties" as="document-node()*">
+        <xsl:param name="doc" as="document-node()"/>
+        <xsl:param name="base-path" as="xs:string"/>
+        <xsl:param name="visited-paths" as="xs:string*"/>
+        
+        <xsl:sequence select="$doc"/>
+        
+        <xsl:for-each select="$doc//import">
+            <xsl:variable name="file-path" select="@file"/>
+            <xsl:variable name="resolved-path" select="
+                if (contains($file-path, '${')) 
+                then $base-path || substring-after(substring-after($file-path, '}'), '/') 
+                else $base-path || $file-path"/>
+            
+            <!-- If we haven't done this path yet -->
+            <xsl:if test="doc-available($resolved-path) and not($resolved-path = $visited-paths)">
+                <xsl:variable name="imported-doc" select="doc($resolved-path)"/>
+                <xsl:variable name="new-base-path" select="substring-before($resolved-path, tokenize($resolved-path, '/')[last()])"/>
+                
+                <xsl:sequence select="sg:collect-properties($imported-doc, $new-base-path, ($visited-paths, $resolved-path))"/>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:function>
+    
 </xsl:stylesheet>
