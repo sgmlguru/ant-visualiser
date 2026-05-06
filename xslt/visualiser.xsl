@@ -33,6 +33,7 @@
     <xsl:variable name="context" select="/"/>
     
     <!-- All property files go here for now -->
+    <!-- TODO Iterate through <property> elements as well -->
     <xsl:variable name="property-files">
         <xmlproperty-files>
             <xsl:for-each select="$context//xmlproperty">
@@ -95,7 +96,11 @@
     
     <xsl:template match="import">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$import-colour}">
+            <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
+            <!-- Ideally we'd need to inject the source document's normalised properties here
+                 so we can add to it -->
             <xsl:copy-of select="sg:resolve-string(@file, $normalised)"/>
+            <!-- Do doc(@file) and look for further properties. -->
         </node>
     </xsl:template>
     
