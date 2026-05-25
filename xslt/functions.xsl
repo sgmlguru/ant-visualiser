@@ -75,4 +75,10 @@
         </xsl:for-each>
     </xsl:function>
     
+    
+    <xsl:function name="sg:generate-id" as="xs:string">
+        <xsl:param name="context"/>
+        <xsl:value-of select="'ID_' || fn:generate-id($context)"/>
+    </xsl:function>
+    
 </xsl:stylesheet>
