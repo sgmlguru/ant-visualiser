@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node
+    TEXT="Book"
+    LOCALIZED_STYLE_REF="AutomaticLayout.level.root"
+    FOLDED="false"
+    ID="ID_1090958577"
+    CREATED="1409300609620"
+    MODIFIED="1764189662410">
+    ...    
+    <node
+        TEXT="Properties"
+        POSITION="top_or_left"
+        ID="ID_972643623"
+        CREATED="1779739411152"
+        MODIFIED="1779739428757">
+        <richcontent TYPE="NOTE">
+            <html>
+                <head>
+                    
+                </head>
+                <body>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>col 1</td>
+                                <td>col 2</td>
+                                <td>col 3</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>col 1</td>
+                                <td>col 2</td>
+                                <td>col 3</td>
+                            </tr>
+                            <tr>
+                                <td>col 1</td>
+                                <td>col 2</td>
+                                <td>col 3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+            </html></richcontent>
+    </node>
+</node>

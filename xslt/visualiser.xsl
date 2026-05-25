@@ -69,6 +69,7 @@
     </xsl:variable>
     
     
+    <!-- Should contain only resolved properties, if everything went well -->
     <xsl:variable name="normalised">
         <xsl:apply-templates select="$property-files" mode="props"/>
     </xsl:variable>
@@ -77,6 +78,7 @@
     <xsl:template match="/*">
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.1">
+                <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
                 <bookmarks>
                     <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
                 </bookmarks>
@@ -88,9 +90,12 @@
                     <xsl:apply-templates select="taskdef | import | xmlproperty | property | target">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
+                    
+                    <!-- Normalised properties go here for now -->
+                    <node TEXT="Properties" POSITION="top_or_left">
+                        <xsl:apply-templates select="$normalised" mode="annotated"/>
+                    </node>
                 </node>
-                
-                <xsl:copy-of select="$normalised"/>
             </map>
         </xsl:variable>
         
@@ -176,5 +181,40 @@
     
     <!-- Remove for now -->
     <xsl:template match="comment() | processing-instruction() | echo"/>
+    
+    
+    <!-- Annotated properties -->
+    <xsl:template match="root" mode="annotated">
+        <richcontent TYPE="NOTE">
+            <html>
+                <head>
+                    
+                </head>
+                <body>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Name/path</td>
+                                <td>Value</td>
+                                <td>State</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:apply-templates select="property" mode="annotated"/>
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        </richcontent>
+    </xsl:template>
+    
+    
+    <xsl:template match="property" mode="annotated">
+        <tr>
+            <td>{@path}</td>
+            <td>{@value}</td>
+            <td>{@done}</td>
+        </tr>
+    </xsl:template>
     
 </xsl:stylesheet>
