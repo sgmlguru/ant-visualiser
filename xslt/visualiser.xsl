@@ -83,7 +83,7 @@
                     <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
                 </bookmarks>
                 <!-- Build file root -->
-                <node TEXT="{$filename || ' - ' || @name}">
+                <node TEXT="{$filename || ' - ' || @name}" ID="{sg:generate-id(.)}">
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
@@ -92,7 +92,7 @@
                     </xsl:apply-templates>
                     
                     <!-- Normalised properties go here for now -->
-                    <node TEXT="Properties" POSITION="top_or_left">
+                    <node TEXT="Properties" POSITION="top_or_left" ID="{sg:generate-id(.)}">
                         <xsl:apply-templates select="$normalised" mode="annotated"/>
                     </node>
                 </node>
@@ -106,25 +106,25 @@
     
     
     <xsl:template match="property">
-        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$config//colour[@name='property']/@value}"/>
+        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$config//colour[@name='property']/@value}" ID="{sg:generate-id(.)}"/>
     </xsl:template>
     
     <xsl:template match="xmlproperty">
-        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='xmlproperty']/@value}">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='xmlproperty']/@value}" ID="{sg:generate-id(.)}">
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
     
     
     <xsl:template match="taskdef">
-        <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$config//colour[@name='taskdef']/@value}">
+        <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$config//colour[@name='taskdef']/@value}" ID="{sg:generate-id(.)}">
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
     
     
     <xsl:template match="import">
-        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='import']/@value}">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='import']/@value}" ID="{sg:generate-id(.)}">
             <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
             
             <!-- We import project files, so we need to look at the project element's children -->
@@ -139,7 +139,7 @@
         <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
         <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
         
-        <node TEXT="{name(.) || ' - ' || $target || $default-label}">
+        <node TEXT="{name(.) || ' - ' || $target || $default-label}" ID="{sg:generate-id(.)}">
             <xsl:apply-templates select="@description"/>
             <xsl:for-each select="$depends">
                 <xsl:variable name="current-target" select="."/>
@@ -166,14 +166,14 @@
     
     
     <xsl:template match="ant[ancestor::target]">
-        <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}"/>
+        <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}" ID="{sg:generate-id(.)}"/>
     </xsl:template>
     
     
     <xsl:template match="target/foreach">
         <xsl:param name="target" tunnel="yes"/>
         <xsl:variable name="foreach-target" select="@target"/>
-        <node TEXT="{name(.) || ' - ' || $foreach-target}">
+        <node TEXT="{name(.) || ' - ' || $foreach-target}" ID="{sg:generate-id(.)}">
             <xsl:apply-templates select="//target[@name = $foreach-target]"/>
         </node>
     </xsl:template>
