@@ -9,7 +9,7 @@
     exclude-result-prefixes="#all"
     version="3.0">
     
-    <xsl:output method="xml" indent="yes"/>
+    <xsl:output method="xml" indent="yes" omit-xml-declaration="no"/>
     
     <!-- Functions -->
     <xsl:import href="functions.xsl"/>
@@ -77,10 +77,10 @@
     
     <xsl:template match="/*">
         <xsl:variable name="mm" as="element()">
-            <map version="freeplane 1.12.1">
+            <map version="freeplane 1.12.14">
                 <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
                 <bookmarks>
-                    <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
+                    <bookmark nodeId="{sg:generate-id(.)}" name="Root" opensAsRoot="true"/>
                 </bookmarks>
                 <!-- Build file root -->
                 <node TEXT="{$filename || ' - ' || @name}" ID="{sg:generate-id(.)}">
