@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <colours>
+        <colour name="taskdef" value="#666600"/>
+        <colour name="import" value="#678900"/>
+        <colour name="xmlproperty" value="#3333ff"/>
+        <colour name="property" value="#999999"/>
+    </colours>
+</config>

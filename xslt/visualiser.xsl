@@ -20,6 +20,8 @@
     <!-- Default target for build -->
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
     
+    <!-- Config -->
+    <xsl:variable name="config" select="doc('./config.xml')" as="document-node()"/>
     
     <xsl:param name="env.date" select="'20260506155549'" as="xs:string?"/>
     <xsl:param name="current.time" select="'194350'" as="xs:string?"/>
@@ -27,10 +29,6 @@
     <xsl:param name="initial-target" select="$default" as="xs:string?"/>
     <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
     
-    <xsl:param name="taskdef-colour" select="'#666600'"/>
-    <xsl:param name="import-colour" select="'#678900'"/>
-    <xsl:param name="xmlproperty-colour" select="'#3333ff'"/>
-    <xsl:param name="property-colour" select="'#999999'"/>
     
     <xsl:variable name="base-uri" select="base-uri(/)"/>
     <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
@@ -103,25 +101,25 @@
     
     
     <xsl:template match="property">
-        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$property-colour}"/>
+        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$config//colour[@name='property']/@value}"/>
     </xsl:template>
     
     <xsl:template match="xmlproperty">
-        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$xmlproperty-colour}">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='xmlproperty']/@value}">
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
     
     
     <xsl:template match="taskdef">
-        <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$taskdef-colour}">
+        <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$config//colour[@name='taskdef']/@value}">
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
     
     
     <xsl:template match="import">
-        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$import-colour}">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='import']/@value}">
             <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
             
             <!-- We import project files, so we need to look at the project element's children -->
