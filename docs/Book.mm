@@ -15,7 +15,7 @@
 <font SIZE="24"/>
 <stylenode LOCALIZED_TEXT="styles.predefined" POSITION="bottom_or_right" STYLE="bubble">
 <stylenode LOCALIZED_TEXT="default" ID="ID_1664261437" ICON_SIZE="12 pt" FORMAT_AS_HYPERLINK="false" COLOR="#002b36" BACKGROUND_COLOR="#fdf6e3" STYLE="bubble" SHAPE_HORIZONTAL_MARGIN="8 pt" SHAPE_VERTICAL_MARGIN="5 pt" BORDER_WIDTH_LIKE_EDGE="false" BORDER_WIDTH="1.9 px" BORDER_COLOR_LIKE_EDGE="false" BORDER_COLOR="#f0f0f0" BORDER_DASH_LIKE_EDGE="true" BORDER_DASH="SOLID" VGAP_QUANTITY="3 pt">
-<arrowlink SHAPE="CUBIC_CURVE" COLOR="#fdf6e3" WIDTH="2" TRANSPARENCY="255" DASH="" FONT_SIZE="9" FONT_FAMILY="SansSerif" DESTINATION="ID_1664261437" STARTINCLINATION="132.75 pt;-30 pt;" ENDINCLINATION="132.75 pt;24 pt;" STARTARROW="NONE" ENDARROW="DEFAULT"/>
+<arrowlink SHAPE="CUBIC_CURVE" COLOR="#fdf6e3" WIDTH="2" TRANSPARENCY="255" DASH="" FONT_SIZE="9" FONT_FAMILY="SansSerif" DESTINATION="ID_1664261437" STARTINCLINATION="132.75 pt;-29.25 pt;" ENDINCLINATION="132.75 pt;24 pt;" STARTARROW="NONE" ENDARROW="DEFAULT"/>
 <font NAME="SansSerif" SIZE="11" BOLD="false" STRIKETHROUGH="false" ITALIC="false"/>
 <edge STYLE="bezier" COLOR="#93a1a1" WIDTH="3" DASH="SOLID"/>
 <richcontent TYPE="DETAILS" CONTENT-TYPE="plain/auto"/>
@@ -146,6 +146,37 @@
 <font BOLD="true"/>
 </node>
 <node TEXT="list" ID="ID_632088076" CREATED="1764362039525" MODIFIED="1764362070836" BACKGROUND_COLOR="#3333ff"/>
+</node>
+<node TEXT="Properties" POSITION="top_or_left" ID="ID_972643623" CREATED="1779739411152" MODIFIED="1779739428757">
+  <richcontent TYPE="NOTE">
+    <html>
+      <head>
+        
+      </head>
+      <body>
+        <table>
+          <thead>
+            <tr>
+              <td>col 1</td>
+              <td>col 2</td>
+              <td>col 3</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>col 1</td>
+              <td>col 2</td>
+              <td>col 3</td>
+            </tr>
+            <tr>
+              <td>col 1</td>
+              <td>col 2</td>
+              <td>col 3</td>
+            </tr>
+          </tbody>
+        </table>
+      </body>
+    </html></richcontent>
 </node>
 </node>
 </map>
