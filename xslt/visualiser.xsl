@@ -116,8 +116,8 @@
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='xmlproperty']/@value}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
+            <!-- Get the unresolved properties, per xmlproperty file, and convert them to rich content -->
             <xsl:variable name="current" select="$base-path || @file"/>
-            <xsl:message>xmlproperty/@file=&quot;{$current}&quot;</xsl:message>
             <xsl:if test="doc-available($current)">
                 <xsl:variable name="xmlproperty-flattened">
                     <xsl:apply-templates select="doc($current)" mode="props"/>
