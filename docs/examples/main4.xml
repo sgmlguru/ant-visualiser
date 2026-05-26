@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    
+    <base>
+        <dir location="/home/main4"/>
+    </base>
+    
+    <sub>
+        <test location="/main4/location/main4"/>
+    </sub>
+    
+    <main>
+        <test location="/main4-only/test/main4"/>
+    </main>
+    
+    <path>
+        <to location="${base.dir}/docs/main4">
+            <dir location="${path.to}/somewhere/main4"/>
+        </to>
+    </path>
+</properties>

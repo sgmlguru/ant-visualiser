@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
+    xmlns:fn="http://www.w3.org/2005/xpath-functions"
+    xmlns:sg="urn:x-sgmlguru:ns:xslt"
+    expand-text="yes"
+    exclude-result-prefixes="#all"
+    version="3.0">
+    
+    <xsl:output method="xml" indent="yes" omit-xml-declaration="no"/>
+    
+    <!-- Functions -->
+    <xsl:import href="functions.xsl"/>
+    
+    <!-- XML property normalisation -->
+    <xsl:include href="normalise-xmlproperties.xsl"/>
+    
+    <!-- Default target for build -->
+    <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
+    
+    <!-- Config -->
+    <xsl:variable name="config" select="doc('./config.xml')" as="document-node()"/>
+    
+    <xsl:param name="env.date" select="'20260506155549'" as="xs:string?"/>
+    <xsl:param name="current.time" select="'194350'" as="xs:string?"/>
+    
+    <xsl:param name="initial-target" select="$default" as="xs:string?"/>
+    <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
+    
+    
+    <xsl:variable name="base-uri" select="base-uri(/)"/>
+    <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
+    <xsl:variable name="base-path" select="substring-before($base-uri, $filename)"/>
+    
+    <xsl:variable name="context" select="/"/>
+    
+    
+    <xsl:variable name="property-files">
+        <xmlproperty-files>
+            <xsl:variable name="all-imported-docs" select="sg:collect-properties(/, $base-path, ())"/>
+            
+            <xsl:for-each select="$all-imported-docs//xmlproperty">
+                <xsl:variable name="current" select="$base-path || @file"/>
+                <xsl:if test="doc-available($current)">
+                    <xsl:copy-of select="doc($current)"/>
+                </xsl:if>
+            </xsl:for-each>
+            
+            <xsl:for-each select="$all-imported-docs//property">
+                <xsl:choose>
+                    <xsl:when test="@file">
+                        <xsl:variable name="prop-file" select="$base-path || @file"/>
+                        <xsl:if test="doc-available($prop-file)">
+                            <xsl:copy-of select="doc($prop-file)"/>
+                        </xsl:if>
+                    </xsl:when>
+                    <xsl:when test="@name and @value">
+                        <property name="{@name}" value="{@value}"/>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:for-each>
+            
+            <xsl:for-each select="$all-imported-docs//local">
+                <xsl:copy-of select="."/>
+            </xsl:for-each>
+        </xmlproperty-files>
+    </xsl:variable>
+    
+    
+    <!-- Should contain only resolved properties, if everything went well -->
+    <xsl:variable name="normalised">
+        <xsl:apply-templates select="$property-files" mode="props"/>
+    </xsl:variable>
+    
+    
+    <xsl:template match="/*">
+        <xsl:variable name="mm" as="element()">
+            <map version="freeplane 1.12.14">
+                <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
+                <bookmarks>
+                    <bookmark nodeId="{sg:generate-id(.)}" name="Root" opensAsRoot="true"/>
+                </bookmarks>
+                <!-- Build file root -->
+                <node TEXT="{$filename || ' - ' || @name}" ID="{sg:generate-id(.)}">
+                    <xsl:sequence select="sg:created-modified()"/>
+                    <!-- Style -->
+                    <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
+                    
+                    <xsl:apply-templates select="taskdef | import | xmlproperty | property | target">
+                        <xsl:with-param name="context" select="." tunnel="yes"/>
+                    </xsl:apply-templates>
+                    
+                    <!-- Normalised properties go here for now -->
+                    <node TEXT="Properties" POSITION="top_or_left" ID="{sg:generate-id(.)}">
+                        <xsl:apply-templates select="$normalised" mode="annotated"/>
+                    </node>
+                </node>
+            </map>
+        </xsl:variable>
+        
+        <!--<xsl:result-document href="{$mm-targetpath || replace($filename, '\.xml', '.mm')}">-->
+            <xsl:copy-of select="$mm"/>
+        <!--</xsl:result-document>-->
+    </xsl:template>
+    
+    
+    <xsl:template match="property">
+        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$config//colour[@name='property']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+        </node>
+    </xsl:template>
+    
+    <xsl:template match="xmlproperty">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='xmlproperty']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            
+            <xsl:variable name="current" select="$base-path || @file"/>
+            <xsl:message>xmlproperty/@file=&quot;{$current}&quot;</xsl:message>
+            <xsl:if test="doc-available($current)">
+                <xsl:variable name="xmlproperty-flattened">
+                    <xsl:apply-templates select="doc($current)" mode="props"/>
+                </xsl:variable>
+                <xsl:apply-templates select="$xmlproperty-flattened" mode="annotated"/>
+            </xsl:if>
+        </node>
+    </xsl:template>
+    
+    
+    <xsl:template match="taskdef">
+        <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$config//colour[@name='taskdef']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <xsl:template match="import">
+        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='import']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
+            
+            <!-- We import project files, so we need to look at the project element's children -->
+            <xsl:apply-templates select="doc(sg:resolve-string(@file, $normalised))/*/*"/>
+        </node>
+    </xsl:template>
+    
+    
+    <xsl:template match="target">
+        <xsl:param name="context" tunnel="yes"/>
+        <xsl:variable name="target" select="@name"/>
+        <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
+        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
+        
+        <node TEXT="{name(.) || ' - ' || $target || $default-label}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:apply-templates select="@description"/>
+            <xsl:for-each select="$depends">
+                <xsl:variable name="current-target" select="."/>
+                <xsl:apply-templates select="$context//target[@name = $current-target]">
+                    <xsl:with-param name="context" select="$context" tunnel="yes"/>
+                </xsl:apply-templates>
+            </xsl:for-each>
+            <xsl:apply-templates select="node()">
+                <xsl:with-param name="target" select="$target" tunnel="yes"/>
+            </xsl:apply-templates>
+        </node>
+    </xsl:template>
+    
+    
+    <xsl:template match="@description">
+        <richcontent TYPE="NOTE">
+            <html>
+                <head/>
+                <body>
+                    <p>{.}</p>
+                </body>
+            </html></richcontent>
+    </xsl:template>
+    
+    
+    <xsl:template match="ant[ancestor::target]">
+        <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}" ID="{sg:generate-id(.)}"/>
+    </xsl:template>
+    
+    
+    <xsl:template match="target/foreach">
+        <xsl:param name="target" tunnel="yes"/>
+        <xsl:variable name="foreach-target" select="@target"/>
+        <node TEXT="{name(.) || ' - ' || $foreach-target}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:apply-templates select="//target[@name = $foreach-target]"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Remove for now -->
+    <xsl:template match="comment() | processing-instruction() | echo"/>
+    
+    
+    <!-- Annotated properties -->
+    <xsl:template match="root | properties" mode="annotated">
+        <richcontent TYPE="NOTE">
+            <html>
+                <head>
+                    
+                </head>
+                <body>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Name/path</td>
+                                <td>Value</td>
+                                <td>State</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:apply-templates select="property" mode="annotated"/>
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        </richcontent>
+    </xsl:template>
+    
+    
+    <xsl:template match="property" mode="annotated">
+        <tr>
+            <td>{@path}</td>
+            <td>{@value}</td>
+            <td>{@done}</td>
+        </tr>
+    </xsl:template>
+    
+</xsl:stylesheet>
