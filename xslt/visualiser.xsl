@@ -9,7 +9,7 @@
     exclude-result-prefixes="#all"
     version="3.0">
     
-    <xsl:output method="xml" indent="yes"/>
+    <xsl:output method="xml" indent="yes" omit-xml-declaration="no"/>
     
     <!-- Functions -->
     <xsl:import href="functions.xsl"/>
@@ -77,13 +77,14 @@
     
     <xsl:template match="/*">
         <xsl:variable name="mm" as="element()">
-            <map version="freeplane 1.12.1">
+            <map version="freeplane 1.12.14">
                 <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
                 <bookmarks>
-                    <bookmark nodeId="ID_1090958577" name="Root" opensAsRoot="true"/>
+                    <bookmark nodeId="{sg:generate-id(.)}" name="Root" opensAsRoot="true"/>
                 </bookmarks>
                 <!-- Build file root -->
                 <node TEXT="{$filename || ' - ' || @name}" ID="{sg:generate-id(.)}">
+                    <xsl:sequence select="sg:created-modified()"/>
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
@@ -106,11 +107,14 @@
     
     
     <xsl:template match="property">
-        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$config//colour[@name='property']/@value}" ID="{sg:generate-id(.)}"/>
+        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{$config//colour[@name='property']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+        </node>
     </xsl:template>
     
     <xsl:template match="xmlproperty">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='xmlproperty']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
@@ -118,6 +122,7 @@
     
     <xsl:template match="taskdef">
         <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{$config//colour[@name='taskdef']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
@@ -125,6 +130,7 @@
     
     <xsl:template match="import">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='import']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
             <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
             
             <!-- We import project files, so we need to look at the project element's children -->
@@ -140,6 +146,7 @@
         <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
         
         <node TEXT="{name(.) || ' - ' || $target || $default-label}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="@description"/>
             <xsl:for-each select="$depends">
                 <xsl:variable name="current-target" select="."/>
@@ -174,6 +181,7 @@
         <xsl:param name="target" tunnel="yes"/>
         <xsl:variable name="foreach-target" select="@target"/>
         <node TEXT="{name(.) || ' - ' || $foreach-target}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="//target[@name = $foreach-target]"/>
         </node>
     </xsl:template>
