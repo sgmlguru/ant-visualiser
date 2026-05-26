@@ -115,7 +115,15 @@
     <xsl:template match="xmlproperty">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{$config//colour[@name='xmlproperty']/@value}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
-            <xsl:apply-templates select="node()"/>
+            
+            <xsl:variable name="current" select="$base-path || @file"/>
+            <xsl:message>xmlproperty/@file=&quot;{$current}&quot;</xsl:message>
+            <xsl:if test="doc-available($current)">
+                <xsl:variable name="xmlproperty-flattened">
+                    <xsl:apply-templates select="doc($current)" mode="props"/>
+                </xsl:variable>
+                <xsl:apply-templates select="$xmlproperty-flattened" mode="annotated"/>
+            </xsl:if>
         </node>
     </xsl:template>
     
@@ -192,7 +200,7 @@
     
     
     <!-- Annotated properties -->
-    <xsl:template match="root" mode="annotated">
+    <xsl:template match="root | properties" mode="annotated">
         <richcontent TYPE="NOTE">
             <html>
                 <head>

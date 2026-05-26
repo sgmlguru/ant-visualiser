@@ -2,7 +2,7 @@
 <properties>
     
     <repo>
-        <dir location="/home/ari/Documents/repos/ant-visualiser/xspec/xml"/>
+        <dir location="/home/ari/Documents/repos/ant-visualiser/docs/examples"/>
         <sub location="${repo.dir}/build_sub.xml"/>
     </repo>
     
