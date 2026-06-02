@@ -95,6 +95,10 @@
                     <!-- Normalised properties go here for now -->
                     <node TEXT="Properties" POSITION="top_or_left" ID="{sg:generate-id(.)}">
                         <xsl:apply-templates select="$normalised" mode="annotated"/>
+                        
+                        <!--<debug>
+                            <xsl:copy-of select="$normalised"/>
+                        </debug>-->
                     </node>
                 </node>
             </map>
@@ -123,6 +127,10 @@
                     <xsl:apply-templates select="doc($current)" mode="props"/>
                 </xsl:variable>
                 <xsl:apply-templates select="$xmlproperty-flattened" mode="annotated"/>
+                
+                <!--<debug>
+                    <xsl:copy-of select="$xmlproperty-flattened"/>
+                </debug>-->
             </xsl:if>
         </node>
     </xsl:template>

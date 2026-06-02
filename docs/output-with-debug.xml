@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="freeplane 1.12.14"><!--To view this file, download free mind mapping software Freeplane from https://www.freeplane.org-->
+   <bookmarks>
+      <bookmark nodeId="ID_d3e1" name="Root" opensAsRoot="true"/>
+   </bookmarks>
+   <node TEXT="build.xml - first"
+         ID="ID_d3e1"
+         CREATED="1780335869711"
+         MODIFIED="1780335870711">
+      <hook NAME="accessories/plugins/AutomaticLayout.properties" VALUE="ALL"/>
+      <font BOLD="true"/>
+      <hook NAME="MapStyle" background="#002b36ff" zoom="0.826">
+         <properties show_icon_for_attributes="true"
+                     edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"
+                     auto_compact_layout="true"
+                     show_tags="UNDER_NODES"
+                     show_note_icons="true"
+                     associatedTemplateLocation="template:/dark_solarized_template.mm"
+                     fit_to_viewport="false"
+                     show_icons="BESIDE_NODES"
+                     showTagCategories="false"/>
+         <tags category_separator="::"/>
+         <map_styles>
+            <stylenode LOCALIZED_TEXT="styles.root_node"
+                       STYLE="oval"
+                       UNIFORM_SHAPE="true"
+                       VGAP_QUANTITY="24 pt">
+               <font SIZE="24"/>
+               <stylenode LOCALIZED_TEXT="styles.predefined"
+                          POSITION="bottom_or_right"
+                          STYLE="bubble">
+                  <stylenode LOCALIZED_TEXT="default"
+                             ID="ID_1664261437"
+                             ICON_SIZE="12 pt"
+                             FORMAT_AS_HYPERLINK="false"
+                             COLOR="#002b36"
+                             BACKGROUND_COLOR="#fdf6e3"
+                             STYLE="bubble"
+                             SHAPE_HORIZONTAL_MARGIN="8 pt"
+                             SHAPE_VERTICAL_MARGIN="5 pt"
+                             BORDER_WIDTH_LIKE_EDGE="false"
+                             BORDER_WIDTH="1.9 px"
+                             BORDER_COLOR_LIKE_EDGE="false"
+                             BORDER_COLOR="#f0f0f0"
+                             BORDER_DASH_LIKE_EDGE="true"
+                             BORDER_DASH="SOLID"
+                             VGAP_QUANTITY="3 pt">
+                     <arrowlink SHAPE="CUBIC_CURVE"
+                                COLOR="#fdf6e3"
+                                WIDTH="2"
+                                TRANSPARENCY="255"
+                                DASH=""
+                                FONT_SIZE="9"
+                                FONT_FAMILY="SansSerif"
+                                DESTINATION="ID_1664261437"
+                                STARTINCLINATION="132.75 pt;-31.5 pt;"
+                                ENDINCLINATION="132.75 pt;24 pt;"
+                                STARTARROW="NONE"
+                                ENDARROW="DEFAULT"/>
+                     <font NAME="SansSerif"
+                           SIZE="11"
+                           BOLD="false"
+                           STRIKETHROUGH="false"
+                           ITALIC="false"/>
+                     <edge STYLE="bezier" COLOR="#93a1a1" WIDTH="3" DASH="SOLID"/>
+                     <richcontent TYPE="DETAILS" CONTENT-TYPE="plain/auto"/>
+                     <richcontent TYPE="NOTE" CONTENT-TYPE="plain/auto"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="defaultstyle.details"
+                             COLOR="#fdf6e3"
+                             BACKGROUND_COLOR="#073642">
+                     <font SIZE="10"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="defaultstyle.tags">
+                     <font SIZE="10"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="defaultstyle.attributes">
+                     <font SIZE="10"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="defaultstyle.note"
+                             COLOR="#000000"
+                             BACKGROUND_COLOR="#2aa198"
+                             TEXT_ALIGN="LEFT">
+                     <icon BUILTIN="clock2"/>
+                     <font SIZE="10" ITALIC="true"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="defaultstyle.selection"
+                             COLOR="#fdf6e3"
+                             BACKGROUND_COLOR="#d33682"
+                             BORDER_COLOR_LIKE_EDGE="false"
+                             BORDER_COLOR="#d33682"/>
+                  <stylenode LOCALIZED_TEXT="defaultstyle.floating">
+                     <edge STYLE="hide_edge"/>
+                     <cloud COLOR="#f0f0f0" SHAPE="ROUND_RECT"/>
+                  </stylenode>
+               </stylenode>
+               <stylenode LOCALIZED_TEXT="styles.user-defined"
+                          POSITION="bottom_or_right"
+                          STYLE="bubble">
+                  <stylenode LOCALIZED_TEXT="styles.important"
+                             ID="ID_1940777954"
+                             BORDER_COLOR_LIKE_EDGE="false"
+                             BORDER_COLOR="#bf616a">
+                     <icon BUILTIN="yes"/>
+                     <arrowlink COLOR="#bf616a" TRANSPARENCY="255" DESTINATION="ID_1940777954"/>
+                     <font NAME="Ubuntu" SIZE="12" BOLD="true"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="styles.flower"
+                             COLOR="#ffffff"
+                             BACKGROUND_COLOR="#255aba"
+                             STYLE="oval"
+                             TEXT_ALIGN="CENTER"
+                             BORDER_WIDTH_LIKE_EDGE="false"
+                             BORDER_WIDTH="22 pt"
+                             BORDER_COLOR_LIKE_EDGE="false"
+                             BORDER_COLOR="#f9d71c"
+                             BORDER_DASH_LIKE_EDGE="false"
+                             BORDER_DASH="CLOSE_DOTS"
+                             MAX_WIDTH="6 cm"
+                             MIN_WIDTH="3 cm"/>
+               </stylenode>
+               <stylenode LOCALIZED_TEXT="styles.AutomaticLayout"
+                          POSITION="bottom_or_right"
+                          STYLE="bubble">
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level.root"
+                             COLOR="#ffffff"
+                             BACKGROUND_COLOR="#002b36"
+                             STYLE="bubble"
+                             SHAPE_HORIZONTAL_MARGIN="10 pt"
+                             SHAPE_VERTICAL_MARGIN="10 pt"
+                             BORDER_WIDTH="3.1 px"
+                             BORDER_COLOR_LIKE_EDGE="true"
+                             BORDER_DASH_LIKE_EDGE="true">
+                     <font SIZE="18"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,1"
+                             COLOR="#fdf6e3"
+                             BACKGROUND_COLOR="#073642"
+                             STYLE="bubble"
+                             SHAPE_HORIZONTAL_MARGIN="8 pt"
+                             SHAPE_VERTICAL_MARGIN="5 pt">
+                     <font SIZE="16"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,2"
+                             COLOR="#fdf6e3"
+                             BACKGROUND_COLOR="#586e75"
+                             STYLE="bubble"
+                             SHAPE_HORIZONTAL_MARGIN="8 pt"
+                             SHAPE_VERTICAL_MARGIN="5 pt"
+                             BORDER_COLOR="#f0f0f0">
+                     <font SIZE="14"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,3"
+                             COLOR="#fdf6e3"
+                             BACKGROUND_COLOR="#657b83"
+                             STYLE="bubble"
+                             SHAPE_HORIZONTAL_MARGIN="8 pt"
+                             SHAPE_VERTICAL_MARGIN="5 pt"
+                             BORDER_COLOR_LIKE_EDGE="true">
+                     <font SIZE="12"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,4"
+                             COLOR="#fdf6e3"
+                             BACKGROUND_COLOR="#839496"
+                             BORDER_COLOR_LIKE_EDGE="true">
+                     <font SIZE="11"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,5"
+                             COLOR="#fdf6e3"
+                             BACKGROUND_COLOR="#93a1a1"
+                             BORDER_COLOR_LIKE_EDGE="true">
+                     <font SIZE="11"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,6"
+                             BACKGROUND_COLOR="#eee8d5"
+                             BORDER_COLOR_LIKE_EDGE="true">
+                     <font SIZE="10"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,7"
+                             BACKGROUND_COLOR="#eedfcc"
+                             BORDER_COLOR="#f0f0f0">
+                     <font SIZE="10"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,8"
+                             BACKGROUND_COLOR="#fdf6e3"
+                             BORDER_COLOR="#f0f0f0">
+                     <font SIZE="10"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,9" BORDER_COLOR="#f0f0f0">
+                     <font SIZE="10"/>
+                  </stylenode>
+                  <stylenode LOCALIZED_TEXT="AutomaticLayout.level,10" BORDER_COLOR="#f0f0f0">
+                     <font SIZE="9"/>
+                  </stylenode>
+               </stylenode>
+            </stylenode>
+         </map_styles>
+      </hook>
+      <node TEXT="xmlproperty - main1.xml"
+            BACKGROUND_COLOR="#3333ff"
+            ID="ID_d3e7"
+            CREATED="1780335869711"
+            MODIFIED="1780335870711">
+         <richcontent TYPE="NOTE">
+            <html>
+               <head/>
+               <body>
+                  <table>
+                     <thead>
+                        <tr>
+                           <td>Name/path</td>
+                           <td>Value</td>
+                           <td>State</td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <td>repo.dir</td>
+                           <td>/home/ari/Documents/repos/ant-visualiser/docs/examples</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>repo.sub</td>
+                           <td>${repo.dir}/build_sub.xml</td>
+                           <td>false</td>
+                        </tr>
+                        <tr>
+                           <td>base.dir</td>
+                           <td>/home/main1</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to</td>
+                           <td>${base.dir}/docs/main1</td>
+                           <td>false</td>
+                        </tr>
+                        <tr>
+                           <td>path.to.dir</td>
+                           <td>${path.to}/somewhere/main1</td>
+                           <td>false</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </body>
+            </html>
+         </richcontent>
+         <debug>
+            <properties>
+               <property path="repo.dir"
+                         value="/home/ari/Documents/repos/ant-visualiser/docs/examples"
+                         done="true"/>
+               <property path="repo.sub" value="${repo.dir}/build_sub.xml" done="false"/>
+               <property path="base.dir" value="/home/main1" done="true"/>
+               <property path="path.to" value="${base.dir}/docs/main1" done="false"/>
+               <property path="path.to.dir" value="${path.to}/somewhere/main1" done="false"/>
+            </properties>
+         </debug>
+      </node>
+      <node TEXT="xmlproperty - main2.xml"
+            BACKGROUND_COLOR="#3333ff"
+            ID="ID_d3e9"
+            CREATED="1780335869711"
+            MODIFIED="1780335870711">
+         <richcontent TYPE="NOTE">
+            <html>
+               <head/>
+               <body>
+                  <table>
+                     <thead>
+                        <tr>
+                           <td>Name/path</td>
+                           <td>Value</td>
+                           <td>State</td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <td>base.dir</td>
+                           <td>/home/main2</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to</td>
+                           <td>${base.dir}/docs/main2</td>
+                           <td>false</td>
+                        </tr>
+                        <tr>
+                           <td>path.to.dir</td>
+                           <td>${path.to}/somewhere/main2</td>
+                           <td>false</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </body>
+            </html>
+         </richcontent>
+         <debug>
+            <properties>
+               <property path="base.dir" value="/home/main2" done="true"/>
+               <property path="path.to" value="${base.dir}/docs/main2" done="false"/>
+               <property path="path.to.dir" value="${path.to}/somewhere/main2" done="false"/>
+            </properties>
+         </debug>
+      </node>
+      <node TEXT="import - ${repo.sub}"
+            BACKGROUND_COLOR="#678900"
+            ID="ID_d3e16"
+            CREATED="1780335869711"
+            MODIFIED="1780335870711">
+         <node TEXT="xmlproperty - sub3.xml"
+               BACKGROUND_COLOR="#3333ff"
+               ID="ID_d41e7"
+               CREATED="1780335869711"
+               MODIFIED="1780335870711">
+            <richcontent TYPE="NOTE">
+               <html>
+                  <head/>
+                  <body>
+                     <table>
+                        <thead>
+                           <tr>
+                              <td>Name/path</td>
+                              <td>Value</td>
+                              <td>State</td>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>base.dir</td>
+                              <td>/home/sub3</td>
+                              <td>true</td>
+                           </tr>
+                           <tr>
+                              <td>sub.test</td>
+                              <td>/sub1/location/sub3</td>
+                              <td>true</td>
+                           </tr>
+                           <tr>
+                              <td>path.to</td>
+                              <td>${base.dir}/docs/sub3</td>
+                              <td>false</td>
+                           </tr>
+                           <tr>
+                              <td>path.to.dir</td>
+                              <td>${path.to}/somewhere/sub3</td>
+                              <td>false</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </body>
+               </html>
+            </richcontent>
+            <debug>
+               <properties>
+                  <property path="base.dir" value="/home/sub3" done="true"/>
+                  <property path="sub.test" value="/sub1/location/sub3" done="true"/>
+                  <property path="path.to" value="${base.dir}/docs/sub3" done="false"/>
+                  <property path="path.to.dir" value="${path.to}/somewhere/sub3" done="false"/>
+               </properties>
+            </debug>
+         </node>
+         <node TEXT="target - echo"
+               ID="ID_d41e9"
+               CREATED="1780335869711"
+               MODIFIED="1780335870711">
+            <richcontent TYPE="NOTE">
+               <html>
+                  <head/>
+                  <body>
+                     <p>Just a Hello World echo</p>
+                  </body>
+               </html>
+            </richcontent>
+         </node>
+      </node>
+      <node TEXT="xmlproperty - main4.xml"
+            BACKGROUND_COLOR="#3333ff"
+            ID="ID_d3e22"
+            CREATED="1780335869711"
+            MODIFIED="1780335870711">
+         <richcontent TYPE="NOTE">
+            <html>
+               <head/>
+               <body>
+                  <table>
+                     <thead>
+                        <tr>
+                           <td>Name/path</td>
+                           <td>Value</td>
+                           <td>State</td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <td>base.dir</td>
+                           <td>/home/main4</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>sub.test</td>
+                           <td>/main4/location/main4</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>main.test</td>
+                           <td>/main4-only/test/main4</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to</td>
+                           <td>${base.dir}/docs/main4</td>
+                           <td>false</td>
+                        </tr>
+                        <tr>
+                           <td>path.to.dir</td>
+                           <td>${path.to}/somewhere/main4</td>
+                           <td>false</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </body>
+            </html>
+         </richcontent>
+         <debug>
+            <properties>
+               <property path="base.dir" value="/home/main4" done="true"/>
+               <property path="sub.test" value="/main4/location/main4" done="true"/>
+               <property path="main.test" value="/main4-only/test/main4" done="true"/>
+               <property path="path.to" value="${base.dir}/docs/main4" done="false"/>
+               <property path="path.to.dir" value="${path.to}/somewhere/main4" done="false"/>
+            </properties>
+         </debug>
+      </node>
+      <node TEXT="target - test (default)"
+            ID="ID_d3e33"
+            CREATED="1780335869711"
+            MODIFIED="1780335870711">
+         <richcontent TYPE="NOTE">
+            <html>
+               <head/>
+               <body>
+                  <p>Just a depend to the sub build followed by an echo that runs last</p>
+               </body>
+            </html>
+         </richcontent>
+      </node>
+      <node TEXT="Properties" POSITION="top_or_left" ID="ID_d3e1">
+         <richcontent TYPE="NOTE">
+            <html>
+               <head/>
+               <body>
+                  <table>
+                     <thead>
+                        <tr>
+                           <td>Name/path</td>
+                           <td>Value</td>
+                           <td>State</td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr>
+                           <td>repo.dir</td>
+                           <td>/home/ari/Documents/repos/ant-visualiser/docs/examples</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>repo.sub</td>
+                           <td>/home/ari/Documents/repos/ant-visualiser/docs/examples/build_sub.xml</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>base.dir</td>
+                           <td>/home/main1</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to</td>
+                           <td>/home/main1/docs/main1</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to.dir</td>
+                           <td>/home/main1/docs/main1/somewhere/main1</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>base.dir</td>
+                           <td>/home/main2</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to</td>
+                           <td>/home/main1/docs/main2</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to.dir</td>
+                           <td>/home/main1/docs/main1/somewhere/main2</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>base.dir</td>
+                           <td>/home/main4</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>sub.test</td>
+                           <td>/main4/location/main4</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>main.test</td>
+                           <td>/main4-only/test/main4</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to</td>
+                           <td>/home/main1/docs/main4</td>
+                           <td>true</td>
+                        </tr>
+                        <tr>
+                           <td>path.to.dir</td>
+                           <td>/home/main1/docs/main1/somewhere/main4</td>
+                           <td>true</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </body>
+            </html>
+         </richcontent>
+         <debug>
+            <root>
+               <property path="repo.dir"
+                         value="/home/ari/Documents/repos/ant-visualiser/docs/examples"
+                         done="true"/>
+               <property path="repo.sub"
+                         value="/home/ari/Documents/repos/ant-visualiser/docs/examples/build_sub.xml"
+                         done="true"/>
+               <property path="base.dir" value="/home/main1" done="true"/>
+               <property path="path.to" value="/home/main1/docs/main1" done="true"/>
+               <property path="path.to.dir"
+                         value="/home/main1/docs/main1/somewhere/main1"
+                         done="true"/>
+               <property path="base.dir" value="/home/main2" done="true"/>
+               <property path="path.to" value="/home/main1/docs/main2" done="true"/>
+               <property path="path.to.dir"
+                         value="/home/main1/docs/main1/somewhere/main2"
+                         done="true"/>
+               <property path="base.dir" value="/home/main4" done="true"/>
+               <property path="sub.test" value="/main4/location/main4" done="true"/>
+               <property path="main.test" value="/main4-only/test/main4" done="true"/>
+               <property path="path.to" value="/home/main1/docs/main4" done="true"/>
+               <property path="path.to.dir"
+                         value="/home/main1/docs/main1/somewhere/main4"
+                         done="true"/>
+            </root>
+         </debug>
+      </node>
+   </node>
+</map>
