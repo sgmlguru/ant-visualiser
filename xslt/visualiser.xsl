@@ -161,6 +161,44 @@
         <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
         <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
         
+        <xsl:choose>
+            <!-- Include every node -->
+            <xsl:when test="$initial-target = 'ALL'">
+                <xsl:call-template name="target-node">
+                    <xsl:with-param name="target" select="$target"/>
+                    <xsl:with-param name="depends" select="$depends"/>
+                    <xsl:with-param name="default-label" select="$default-label"/>
+                </xsl:call-template>
+            </xsl:when>
+            
+            <!-- Include default node -->
+            <xsl:when test="$initial-target = 'DEFAULT'">
+                
+            </xsl:when>
+        </xsl:choose>
+        
+        <node TEXT="{name(.) || ' - ' || $target || $default-label}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:apply-templates select="@description"/>
+            <xsl:for-each select="$depends">
+                <xsl:variable name="current-target" select="."/>
+                <xsl:apply-templates select="$context//target[@name = $current-target]">
+                    <xsl:with-param name="context" select="$context" tunnel="yes"/>
+                </xsl:apply-templates>
+            </xsl:for-each>
+            <xsl:apply-templates select="node()">
+                <xsl:with-param name="target" select="$target" tunnel="yes"/>
+            </xsl:apply-templates>
+        </node>
+    </xsl:template>
+    
+    
+    <xsl:template name="target-node">
+        <xsl:param name="context" tunnel="yes"/>
+        <xsl:param name="target"/>
+        <xsl:param name="depends"/>
+        <xsl:param name="default-label"/>
+        
         <node TEXT="{name(.) || ' - ' || $target || $default-label}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="@description"/>
