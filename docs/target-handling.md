@@ -24,6 +24,11 @@ This can mean a few things:
 * If `$default = ''`, we only use "indirect targets", i.e. targets used by other targets. Not sure this is workable.
 
 
+## `$initial-target` = <target_name>
+
+We will strictly match `$initial-target=<target_name>`
+
+
 ## `$initial-target` Is Not Set by User
 
 * Defaults to `$default`, if set.
