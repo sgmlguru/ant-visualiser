@@ -30,13 +30,13 @@
     <!-- User-provided initial target or other config -->
     <xsl:param name="initial-target" as="xs:string?"/>
     
-    <!-- The location of the generated mind map -->
-    <xsl:param name="mm-targetpath" select="'file:///home/ari/Documents/repos/ant-visualiser/tmp/'"/>
-    
     
     <xsl:variable name="base-uri" select="base-uri(/)"/>
     <xsl:variable name="filename" select="tokenize($base-uri, '/')[last()]"/>
     <xsl:variable name="base-path" select="substring-before($base-uri, $filename)"/>
+    
+    <!-- The location of the generated mind map -->
+    <xsl:param name="mm-targetpath" select="$base-path"/>
     
     <xsl:variable name="context" select="/"/>
     
@@ -193,6 +193,45 @@
     </xsl:template>
     
     
+    <!-- Look at a target named by the user, so $initial-target is set -->
+    <xsl:template match="target[@name = $initial-target and $initial-target != '']">
+        <xsl:param name="context" tunnel="yes"/>
+        <xsl:variable name="target" select="@name"/>
+        <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
+        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
+        
+        <xsl:message>Matched target/@name={@name}</xsl:message>
+        
+        <xsl:call-template name="target-node">
+            <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
+            <xsl:with-param name="target" select="$target"/>
+            <xsl:with-param name="depends" select="$depends"/>
+            <xsl:with-param name="default-label" select="$default-label"/>
+        </xsl:call-template>
+    </xsl:template>
+    
+    
+    <xsl:template match="target[@name != $initial-target]">
+        <xsl:param name="read-default" select="false()" as="xs:boolean" tunnel="yes"/>
+        <xsl:param name="context" tunnel="yes"/>
+        <xsl:variable name="target" select="@name"/>
+        <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
+        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
+        
+        <xsl:message>Matched target/@name={@name}</xsl:message>
+        
+        <xsl:if test="$read-default">
+            <xsl:call-template name="target-node">
+                <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
+                <xsl:with-param name="target" select="$target"/>
+                <xsl:with-param name="depends" select="$depends"/>
+                <xsl:with-param name="default-label" select="$default-label"/>
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+    
+    
+    <!-- Targets handled when initial-target looks at @default -->
     <xsl:template match="target[@name != $default and ($initial-target = 'DEFAULT' or $initial-target = '') and $default != '']">
         <xsl:param name="read-default" select="false()" as="xs:boolean" tunnel="yes"/>
         <xsl:param name="context" tunnel="yes"/>
