@@ -16,5 +16,9 @@ Currently, you're simply running an XSLT 3.0 stylesheet. If you have oXygen inst
 
 * The transformation target, i.e. input file, is the Ant build file you are interested in.
 * You currently have these parameters:
-	* `$initial-target` is your initial Ant `target` name. If the build file provides a default target via `@default`, that's what the XSLT will use unless you provide some other target in the build file. Bad things will currently happen if there is no default and you don't provide an initial target.
-	* `$mm-targetpath` is just the location of your desired target folder, including a trailing '/'. This is a URL, mind, and I currently have no idea what will happen with Windows paths. 
+	* `$initial-target` is used to configure the transform:
+		* 'ALL' will show you *all targets* in the build, even if they aren't used.
+		* 'DEFAULT' will show you the default target and its dependencies, IF set in `/roject/@default`.
+		* '' (empty string) will show the default target, if one exists.
+		* <TARGET_NAME> shows the specified target.
+	* `$mm-targetpath` is the location of the target folder where the resulting mind map is saved, including a trailing '/', and defaults to the location of the input build file. This is a URL, mind, and I currently have no idea what will happen with Windows paths (I've developed the XSLT on Linux). 
