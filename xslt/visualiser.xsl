@@ -161,96 +161,59 @@
     </xsl:template>
     
     
-    <xsl:template match="target[$initial-target = 'ALL']">
+    <!-- Refactored target -->
+    <xsl:template match="target">
         <xsl:param name="context" tunnel="yes"/>
-        <xsl:variable name="target" select="@name"/>
-        <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
-        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
-        
-        <xsl:message>Matched target/@name={@name}</xsl:message>
-        
-        <xsl:call-template name="target-node">
-            <xsl:with-param name="target" select="$target"/>
-            <xsl:with-param name="depends" select="$depends"/>
-            <xsl:with-param name="default-label" select="$default-label"/>
-        </xsl:call-template>
-    </xsl:template>
-    
-    
-    <!-- Initial match for default target -->
-    <xsl:template match="target[@name = $default and ($initial-target = 'DEFAULT' or $initial-target = '') and $default != '']">
-        <xsl:param name="context" tunnel="yes"/>
-        <xsl:variable name="target" select="@name"/>
-        <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
-        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
-        
-        <xsl:message>Matched target/@name={@name}</xsl:message>
-        
-        <xsl:call-template name="target-node">
-            <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
-            <xsl:with-param name="target" select="$target"/>
-            <xsl:with-param name="depends" select="$depends"/>
-            <xsl:with-param name="default-label" select="$default-label"/>
-        </xsl:call-template>
-    </xsl:template>
-    
-    
-    <!-- Look at a target named by the user, so $initial-target is set -->
-    <xsl:template match="target[@name = $initial-target and $initial-target != '']">
-        <xsl:param name="context" tunnel="yes"/>
-        <xsl:variable name="target" select="@name"/>
-        <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
-        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
-        
-        <xsl:message>Matched target/@name={@name}</xsl:message>
-        
-        <xsl:call-template name="target-node">
-            <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
-            <xsl:with-param name="target" select="$target"/>
-            <xsl:with-param name="depends" select="$depends"/>
-            <xsl:with-param name="default-label" select="$default-label"/>
-        </xsl:call-template>
-    </xsl:template>
-    
-    
-    <xsl:template match="target[not(matches(@name, $initial-target)) and $initial-target != 'DEFAULT']">
         <xsl:param name="read-default" select="false()" as="xs:boolean" tunnel="yes"/>
-        <xsl:param name="context" tunnel="yes"/>
         <xsl:variable name="target" select="@name"/>
         <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
-        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
         
-        <xsl:message>Matched target/@name={@name}</xsl:message>
+        <xsl:choose>
+            <!-- Show all targets -->
+            <xsl:when test="$initial-target = 'ALL'">
+                <xsl:call-template name="target-node">
+                    <xsl:with-param name="target" select="$target"/>
+                    <xsl:with-param name="depends" select="$depends"/>
+                </xsl:call-template>
+            </xsl:when>
+            
+            <!-- Initial run for default target -->
+            <xsl:when test="@name = $default and ($initial-target = 'DEFAULT' or $initial-target = '') and $default != ''">
+                <xsl:call-template name="target-node">
+                    <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
+                    <xsl:with-param name="target" select="$target"/>
+                    <xsl:with-param name="depends" select="$depends"/>
+                </xsl:call-template>
+            </xsl:when>
+            
+            <!-- User-named target, initial run -->
+            <xsl:when test="@name = $initial-target and $initial-target != ''">
+                <xsl:call-template name="target-node">
+                    <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
+                    <xsl:with-param name="target" select="$target"/>
+                    <xsl:with-param name="depends" select="$depends"/>
+                </xsl:call-template>
+            </xsl:when>
+            
+            <!-- Any target that isn't a user-named target or default -->
+            <xsl:when test="not(matches(@name, $initial-target)) and $initial-target != 'DEFAULT' and $read-default">
+                <xsl:call-template name="target-node">
+                    <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
+                    <xsl:with-param name="target" select="$target"/>
+                    <xsl:with-param name="depends" select="$depends"/>
+                </xsl:call-template>
+            </xsl:when>
+            
+            <!-- Any target that is not the default, but user-named target is DEFAULT or empty, and default target node has already been processed -->
+            <xsl:when test="@name != $default and ($initial-target = 'DEFAULT' or $initial-target = '') and $default != '' and $read-default">
+                <xsl:call-template name="target-node">
+                    <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
+                    <xsl:with-param name="target" select="$target"/>
+                    <xsl:with-param name="depends" select="$depends"/>
+                </xsl:call-template>
+            </xsl:when>
+        </xsl:choose>
         
-        <xsl:if test="$read-default">
-            <xsl:call-template name="target-node">
-                <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
-                <xsl:with-param name="target" select="$target"/>
-                <xsl:with-param name="depends" select="$depends"/>
-                <xsl:with-param name="default-label" select="$default-label"/>
-            </xsl:call-template>
-        </xsl:if>
-    </xsl:template>
-    
-    
-    <!-- Targets handled when initial-target looks at @default -->
-    <xsl:template match="target[@name != $default and ($initial-target = 'DEFAULT' or $initial-target = '') and $default != '']">
-        <xsl:param name="read-default" select="false()" as="xs:boolean" tunnel="yes"/>
-        <xsl:param name="context" tunnel="yes"/>
-        <xsl:variable name="target" select="@name"/>
-        <xsl:variable name="depends" select="tokenize(@depends, ',[\s*]')"/>
-        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
-        
-        <xsl:message>Matched target/@name={@name}</xsl:message>
-        
-        <xsl:if test="$read-default">
-            <xsl:call-template name="target-node">
-                <xsl:with-param name="read-default" select="true()" tunnel="yes"/>
-                <xsl:with-param name="target" select="$target"/>
-                <xsl:with-param name="depends" select="$depends"/>
-                <xsl:with-param name="default-label" select="$default-label"/>
-            </xsl:call-template>
-        </xsl:if>
     </xsl:template>
     
     
@@ -260,13 +223,14 @@
         <xsl:param name="context" tunnel="yes"/>
         <xsl:param name="target"/>
         <xsl:param name="depends"/>
-        <xsl:param name="default-label"/>
+        
+        <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
         
         <node TEXT="{name(.) || ' - ' || $target || $default-label}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="@description"/>
             
-            <!-- Iterate through @depends -->
+            <!-- Iterate through @depends to get current node's children -->
             <xsl:for-each select="$depends">
                 <xsl:variable name="current-target" select="."/>
                 <xsl:apply-templates select="$context//target[@name = $current-target]">
@@ -289,7 +253,8 @@
                 <body>
                     <p>{.}</p>
                 </body>
-            </html></richcontent>
+            </html>
+        </richcontent>
     </xsl:template>
     
     
