@@ -108,9 +108,11 @@
             </map>
         </xsl:variable>
         
-        <!--<xsl:result-document href="{$mm-targetpath || replace($filename, '\.xml', '.mm')}">-->
+        <xsl:message>Save to {$mm-targetpath || replace($filename, '\.xml', '.mm')}</xsl:message>
+        
+        <xsl:result-document href="{$mm-targetpath || replace($filename, '\.xml', '.mm')}">
             <xsl:copy-of select="$mm"/>
-        <!--</xsl:result-document>-->
+        </xsl:result-document>
     </xsl:template>
     
     
@@ -211,7 +213,7 @@
     </xsl:template>
     
     
-    <xsl:template match="target[@name != $initial-target]">
+    <xsl:template match="target[not(matches(@name, $initial-target)) and $initial-target != 'DEFAULT']">
         <xsl:param name="read-default" select="false()" as="xs:boolean" tunnel="yes"/>
         <xsl:param name="context" tunnel="yes"/>
         <xsl:variable name="target" select="@name"/>
