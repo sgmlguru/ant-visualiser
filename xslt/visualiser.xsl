@@ -297,7 +297,7 @@
     
     
     <!-- Annotated properties -->
-    <xsl:template match="root | properties" mode="annotated">
+    <xsl:template match="properties" mode="annotated">
         <richcontent TYPE="NOTE">
             <html>
                 <head>
