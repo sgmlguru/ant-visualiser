@@ -85,7 +85,7 @@
         
         <!-- Calculate resolved values -->
         <xsl:variable name="calculated">
-            <root>
+            <properties>
                 <xsl:for-each select="$properties//property">
                     <xsl:choose>
                         <xsl:when test="@path = 'env.date'">
@@ -148,7 +148,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:for-each>
-            </root>
+            </properties>
         </xsl:variable>
         
         <xsl:choose>
