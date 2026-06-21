@@ -2,6 +2,13 @@
 <config>
     <colours>
         <colour name="taskdef" value="#666600"/>
+        <colour name="task-file-operations" value="#008000"/>
+        <colour name="task-fileset" value="#228B22"/>
+        <colour name="task-string" value="#FFD700"/>
+        <colour name="task-exec" value="#000080"/>
+        <colour name="local" value="#2F4F4F"/>
+        <colour name="control" value="#B22222"/>
+        <colour name="admin" value="#D8BFD8"/>
         <colour name="import" value="#678900"/>
         <colour name="xmlproperty" value="#3333ff"/>
         <colour name="property" value="#999999"/>
