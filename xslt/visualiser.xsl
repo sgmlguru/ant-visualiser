@@ -246,7 +246,8 @@
     </xsl:template>
     
     
-    <xsl:template match="@description">
+    <!-- Description on targets -->
+    <xsl:template match="@description | @todir">
         <richcontent TYPE="NOTE">
             <html>
                 <head/>
@@ -263,10 +264,104 @@
     </xsl:template>
     
     
+    <!-- File operation tasks -->
+    <xsl:template match="copy | move | mkdir | loadresource | loadfile">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{$config//colour[@name='task-file-operations']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Filtering on files -->
+    <xsl:template match="fileset | include | exclude | filelist | path | filterchain | tokenfilter | filetokenizer">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{$config//colour[@name='task-fileset']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- String manipulation -->
+    <xsl:template match="replaceregexp | propertyregex | concat | replacestring">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{$config//colour[@name='task-string']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Executables -->
+    <xsl:template match="exec | arg">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{$config//colour[@name='task-exec']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Control functions -->
+    <xsl:template match="if | isset | equals | then | else | condition | not">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{$config//colour[@name='control']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Property usage locally -->
+    <xsl:template match="local | propertyresource">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{$config//colour[@name='local']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Admin -->
+    <xsl:template match="record">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{$config//colour[@name='admin']/@value}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Attribute value output -->
+    <xsl:template name="info">
+        <richcontent TYPE="NOTE">
+            <html>
+                <head/>
+                <body>
+                    <xsl:apply-templates select="@*" mode="info"/>
+                    
+                    <!-- If we are looking at <exec> there will be args -->
+                    <xsl:if test="arg">
+                        <p>
+                            <xsl:apply-templates select="fn:string-join(arg/@value, ' ')"/>
+                        </p>
+                    </xsl:if>
+                </body>
+            </html>
+        </richcontent>
+    </xsl:template>
+    
+    
+    <!-- Attribute-based info -->
+    <xsl:template match="@*" mode="info">
+        <p>{name(.) || '=&quot;' || . || '&quot;'}</p>
+    </xsl:template>
+    
+    
     <xsl:template match="target/foreach">
         <xsl:param name="target" tunnel="yes"/>
         <xsl:variable name="foreach-target" select="@target"/>
-        <node TEXT="{name(.) || ' - ' || $foreach-target}" ID="{sg:generate-id(.)}">
+        <node TEXT="{name(.) || ' - ' || $foreach-target}" BACKGROUND_COLOR="{$config//colour[@name='control']/@value}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="//target[@name = $foreach-target]"/>
         </node>
