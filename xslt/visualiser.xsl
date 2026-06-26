@@ -26,6 +26,13 @@
     <!-- Config -->
     <xsl:variable name="config" select="doc($config-file)" as="document-node()"/>
     
+    <!-- Sequence of task/component names -->
+    <xsl:variable
+        name="tasks" 
+        select="$config//group[not(@generic)]/@components 
+        => string-join(' ') 
+        => tokenize('\s+')" />
+    
     <!-- Ant property hacks -->
     <xsl:param name="env.date" select="'20260506155549'" as="xs:string?"/>
     <xsl:param name="current.time" select="'194350'" as="xs:string?"/>
@@ -267,70 +274,12 @@
     </xsl:template>
     
     
-    <!-- File operation tasks -->
-    <xsl:template match="copy | move | mkdir | loadresource | loadfile">
+    <!-- Generic tasks/components, as defined in config -->
+    <xsl:template match="*[local-name() = $tasks]">
         <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             <xsl:call-template name="info"/>
             <xsl:apply-templates select="node()"/>
-        </node>
-    </xsl:template>
-    
-    
-    <!-- Filtering on files -->
-    <xsl:template match="fileset | include | exclude | filelist | path | filterchain | tokenfilter | filetokenizer">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
-            <xsl:sequence select="sg:created-modified()"/>
-            <xsl:call-template name="info"/>
-            <xsl:apply-templates select="node()"/>
-        </node>
-    </xsl:template>
-    
-    
-    <!-- String manipulation -->
-    <xsl:template match="replaceregexp | propertyregex | concat | replacestring">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
-            <xsl:sequence select="sg:created-modified()"/>
-            <xsl:call-template name="info"/>
-            <xsl:apply-templates select="node()"/>
-        </node>
-    </xsl:template>
-    
-    
-    <!-- Executables -->
-    <xsl:template match="exec | arg">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
-            <xsl:sequence select="sg:created-modified()"/>
-            <xsl:call-template name="info"/>
-            <xsl:apply-templates select="node()"/>
-        </node>
-    </xsl:template>
-    
-    
-    <!-- Control functions -->
-    <xsl:template match="if | isset | equals | then | else | condition | not">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
-            <xsl:sequence select="sg:created-modified()"/>
-            <xsl:call-template name="info"/>
-            <xsl:apply-templates select="node()"/>
-        </node>
-    </xsl:template>
-    
-    
-    <!-- Property usage locally -->
-    <xsl:template match="local | propertyresource">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
-            <xsl:sequence select="sg:created-modified()"/>
-            <xsl:call-template name="info"/>
-        </node>
-    </xsl:template>
-    
-    
-    <!-- Admin -->
-    <xsl:template match="record">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
-            <xsl:sequence select="sg:created-modified()"/>
-            <xsl:call-template name="info"/>
         </node>
     </xsl:template>
     
