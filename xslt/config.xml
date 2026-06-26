@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <colours>
-        <colour name="taskdef" value="#666600"/>
-        <colour name="task-file-operations" value="#008000"/>
-        <colour name="task-fileset" value="#228B22"/>
-        <colour name="task-string" value="#FFD700"/>
-        <colour name="task-exec" value="#000080"/>
-        <colour name="local" value="#2F4F4F"/>
-        <colour name="control" value="#B22222"/>
-        <colour name="admin" value="#D8BFD8"/>
-        <colour name="import" value="#678900"/>
-        <colour name="xmlproperty" value="#3333ff"/>
-        <colour name="property" value="#999999"/>
-    </colours>
+    <groups>
+        <group name="taskdef" components="taskdef">
+            <colour value="#666600"/>
+        </group>
+        <group name="task-file-operations" components="copy move mkdir loadresource loadfile">
+            <colour value="#008000"/>
+        </group>
+        <group name="task-fileset" components="fileset include exclude filelist path filterchain tokenfilter filetokenizer">
+            <colour value="#228B22"/>
+        </group>
+        <group name="task-string" components="replaceregexp propertyregex concat replacestring">
+            <colour value="#FFD700"/>
+        </group>
+        <group name="task-exec" components="exec arg">
+            <colour value="#000080"/>
+        </group>
+        <group name="local" components="local propertyresource">
+            <colour value="#2F4F4F"/>
+        </group>
+        <group name="control" components="if isset equals then else condition not">
+            <colour value="#B22222"/>
+        </group>
+        <group name="admin" components="record">
+            <colour value="#D8BFD8"/>
+        </group>
+        <group name="import" components="import">
+            <colour value="#678900"/>
+        </group>
+        <group name="xmlproperty" components="xmlproperty">
+            <colour value="#3333ff"/>
+        </group>
+        <group name="property" components="property">
+            <colour value="#999999"/>
+        </group>
+    </groups>
 </config>
