@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <groups>
-        <group name="taskdef" components="taskdef">
+        <group name="taskdef" components="taskdef" generic="false">
             <colour value="#666600"/>
         </group>
         <group name="task-file-operations" components="copy move mkdir loadresource loadfile">
@@ -25,13 +25,13 @@
         <group name="admin" components="record">
             <colour value="#D8BFD8"/>
         </group>
-        <group name="import" components="import">
+        <group name="import" components="import" generic="false">
             <colour value="#678900"/>
         </group>
-        <group name="xmlproperty" components="xmlproperty">
+        <group name="xmlproperty" components="xmlproperty" generic="false">
             <colour value="#3333ff"/>
         </group>
-        <group name="property" components="property">
+        <group name="property" components="property" generic="false">
             <colour value="#999999"/>
         </group>
     </groups>
