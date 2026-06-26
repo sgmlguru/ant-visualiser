@@ -87,4 +87,12 @@
         <xsl:attribute name="MODIFIED" select="floor((current-dateTime() - xs:dateTime('1970-01-01T00:00:00Z')) div xs:dayTimeDuration('PT0.001S')) + 1000"/>
     </xsl:function>
     
+    
+    <xsl:function name="sg:get-colour" as="xs:string">
+        <xsl:param name="config"/>
+        <xsl:param name="name"/>
+        
+        <xsl:value-of select="$config//group[@name = $name]/colour/@value"/>
+    </xsl:function>
+    
 </xsl:stylesheet>
