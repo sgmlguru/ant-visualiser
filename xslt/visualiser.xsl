@@ -20,8 +20,13 @@
     <!-- Default target for build -->
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
     
+    <!-- Static path -->
+    <xsl:variable
+        name="xslt-path"
+        select="substring-before(fn:static-base-uri(), tokenize(fn:static-base-uri(), '/')[last()])"/>
+    
     <!-- Config file -->
-    <xsl:param name="config-file" select="'./config.xml'"/>
+    <xsl:param name="config-file" select="$xslt-path || 'config.xml'"/>
     
     <!-- Config -->
     <xsl:variable name="config" select="doc($config-file)" as="document-node()"/>
@@ -89,6 +94,12 @@
     </xsl:variable>
     
     
+    <!-- Macros list -->
+    <xsl:variable name="macros">
+        
+    </xsl:variable>
+    
+    
     <xsl:template match="/*">
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.14">
@@ -102,7 +113,7 @@
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
-                    <xsl:apply-templates select="taskdef | import | xmlproperty | property | target">
+                    <xsl:apply-templates select="taskdef | include | import | xmlproperty | property | target">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
                     
@@ -110,7 +121,7 @@
                     <node TEXT="Properties" POSITION="top_or_left" ID="{sg:generate-id(.)}">
                         <xsl:apply-templates select="$normalised" mode="annotated"/>
                         
-                        <!--<debug>
+                        <!--<debug content="normalised">
                             <xsl:copy-of select="$normalised"/>
                         </debug>-->
                     </node>
@@ -152,21 +163,44 @@
     </xsl:template>
     
     
-    <xsl:template match="taskdef">
+    <xsl:template match="taskdef" priority="10">
         <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
-            <xsl:apply-templates select="node()"/>
+            <xsl:choose>
+                <xsl:when test="fn:doc-available(sg:resolve-string(@resource, $normalised))">
+                    <xsl:apply-templates select="doc(sg:resolve-string(@resource, $normalised))/*/*"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <node TEXT="{sg:resolve-string(@resource, $normalised)}"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </node>
     </xsl:template>
     
     
-    <xsl:template match="import">
+    <xsl:template match="import | include" priority="10">
         <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
-            <!-- Put the resolved path in a tooltip or other mindmap documentation node -->
             
             <!-- We import project files, so we need to look at the project element's children -->
-            <xsl:apply-templates select="doc(sg:resolve-string(@file, $normalised))/*/*"/>
+            <xsl:choose>
+                <xsl:when test="fn:doc-available(sg:resolve-string(@file, $normalised))">
+                    <xsl:apply-templates select="doc(sg:resolve-string(@file, $normalised))/*/*"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <node TEXT="{@file || sg:resolve-string(@file, $normalised)}"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Macros -->
+    <xsl:template match="macrodef" priority="10">
+        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            <xsl:call-template name="info"/>
+            <xsl:apply-templates select="node()"/>
         </node>
     </xsl:template>
     
