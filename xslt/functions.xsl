@@ -92,7 +92,9 @@
         <xsl:param name="config"/>
         <xsl:param name="name"/>
         
-        <xsl:value-of select="$config//group[@name = $name]/colour/@value"/>
+        <xsl:value-of select="$config//group[@components 
+            => string-join(' ') 
+            => tokenize('\s+') = $name]/colour/@value"/>
     </xsl:function>
     
 </xsl:stylesheet>

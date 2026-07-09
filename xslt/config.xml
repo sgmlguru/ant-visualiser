@@ -11,10 +11,10 @@
             <colour value="#228B22"/>
         </group>
         <group name="task-string" components="replaceregexp propertyregex concat replacestring">
-            <colour value="#FFD700"/>
+            <colour value="#f07d0a"/>
         </group>
         <group name="task-exec" components="exec arg">
-            <colour value="#000080"/>
+            <colour value="#2f72ad"/>
         </group>
         <group name="local" components="local propertyresource">
             <colour value="#2F4F4F"/>
@@ -23,9 +23,9 @@
             <colour value="#B22222"/>
         </group>
         <group name="admin" components="record">
-            <colour value="#D8BFD8"/>
+            <colour value="#1bcc35"/>
         </group>
-        <group name="import" components="import" generic="false">
+        <group name="import" components="import include" generic="false">
             <colour value="#678900"/>
         </group>
         <group name="xmlproperty" components="xmlproperty" generic="false">
@@ -33,6 +33,9 @@
         </group>
         <group name="property" components="property" generic="false">
             <colour value="#999999"/>
+        </group>
+        <group name="macro" components="macrodef" generic="false">
+            <colour value="#f00707"/>
         </group>
     </groups>
 </config>
