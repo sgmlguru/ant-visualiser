@@ -94,12 +94,6 @@
     </xsl:variable>
     
     
-    <!-- Macros list -->
-    <xsl:variable name="macros">
-        
-    </xsl:variable>
-    
-    
     <xsl:template match="/*">
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.14">
