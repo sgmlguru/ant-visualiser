@@ -17,6 +17,7 @@
     <!-- XML property normalisation -->
     <xsl:include href="normalise-xmlproperties.xsl"/>
     
+    
     <!-- Default target for build -->
     <xsl:variable name="default" select="/*/@default" as="xs:string?"/>
     
@@ -56,6 +57,7 @@
     <xsl:variable name="context" select="/"/>
     
     
+    <!-- Read in all properties -->
     <xsl:variable name="property-files">
         <xmlproperty-files>
             <xsl:variable name="all-imported-docs" select="sg:collect-properties(/, $base-path, ())"/>
@@ -94,7 +96,21 @@
     </xsl:variable>
     
     
+    <!-- Read root -->
     <xsl:template match="/*">
+        <!-- Get a list of macros -->
+        <xsl:variable name="all-macros">
+            <all-macros>
+                <xsl:for-each
+                    select="distinct-values(sg:find-macros($base-uri, (), $normalised))">
+                    <macro>
+                        <xsl:value-of select="."/>
+                    </macro>
+                </xsl:for-each>
+            </all-macros>
+        </xsl:variable>
+        
+        <!-- Convert to mind map -->
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.14">
                 <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
@@ -102,17 +118,23 @@
                     <bookmark nodeId="{sg:generate-id(.)}" name="Root" opensAsRoot="true"/>
                 </bookmarks>
                 <!-- Build file root -->
-                <node TEXT="{$filename || ' - ' || @name}" ID="{sg:generate-id(.)}">
+                <node
+                    TEXT="{$filename || ' - ' || @name}"
+                    ID="{sg:generate-id(.)}">
                     <xsl:sequence select="sg:created-modified()"/>
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
-                    <xsl:apply-templates select="taskdef | include | import | xmlproperty | property | target">
+                    <xsl:apply-templates select=".//taskdef | .//include | .//import | .//xmlproperty | .//property | .//target">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
                     
                     <!-- Normalised properties go here for now -->
-                    <node TEXT="Properties" POSITION="top_or_left" ID="{sg:generate-id(.)}">
+                    <node
+                        TEXT="Properties"
+                        POSITION="top_or_left"
+                        ID="{sg:generate-id(.)}">
+                        
                         <xsl:apply-templates select="$normalised" mode="annotated"/>
                         
                         <!--<debug content="normalised">
@@ -120,6 +142,10 @@
                         </debug>-->
                     </node>
                 </node>
+                
+                <!--<debug content="macros">
+                    <xsl:copy-of select="$all-macros"/>
+                </debug>-->
             </map>
         </xsl:variable>
         
@@ -132,13 +158,19 @@
     
     
     <xsl:template match="property">
-        <node TEXT="{name(.) || ' - ' || @name || '=' || @value}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.) || ' - ' || @name || '=' || @value}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
         </node>
     </xsl:template>
     
     <xsl:template match="xmlproperty">
-        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.) || ' - ' || @file}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
             <!-- Get the unresolved properties, per xmlproperty file, and convert them to rich content -->
@@ -158,8 +190,12 @@
     
     
     <xsl:template match="taskdef" priority="10">
-        <node TEXT="{name(.) || ' - ' || @resource}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.) || ' - ' || @resource}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
+            
             <xsl:choose>
                 <xsl:when test="fn:doc-available(sg:resolve-string(@resource, $normalised))">
                     <xsl:apply-templates select="doc(sg:resolve-string(@resource, $normalised))/*/*"/>
@@ -173,7 +209,10 @@
     
     
     <xsl:template match="import | include" priority="10">
-        <node TEXT="{name(.) || ' - ' || @file}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.) || ' - ' || @file}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
             <!-- We import project files, so we need to look at the project element's children -->
@@ -191,8 +230,12 @@
     
     <!-- Macros -->
     <xsl:template match="macrodef" priority="10">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.)} - {@name}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
+            
             <xsl:call-template name="info"/>
             <xsl:apply-templates select="node()"/>
         </node>
@@ -264,7 +307,9 @@
         
         <xsl:variable name="default-label" select="if ($target = $default) then (' (default)') else ('')"/>
         
-        <node TEXT="{name(.) || ' - ' || $target || $default-label}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.) || ' - ' || $target || $default-label}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             <xsl:apply-templates select="@description"/>
             
@@ -298,14 +343,20 @@
     
     
     <xsl:template match="ant[ancestor::target]">
-        <node TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}" ID="{sg:generate-id(.)}"/>
+        <node
+            TEXT="{name(.) || ' - ' || @antfile || ' ' || @target}"
+            ID="{sg:generate-id(.)}"/>
     </xsl:template>
     
     
     <!-- Generic tasks/components, as defined in config -->
     <xsl:template match="*[local-name() = $tasks]">
-        <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.)}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
+            
             <xsl:call-template name="info"/>
             <xsl:apply-templates select="node()"/>
         </node>
@@ -341,16 +392,23 @@
     <xsl:template match="target/foreach">
         <xsl:param name="target" tunnel="yes"/>
         <xsl:variable name="foreach-target" select="@target"/>
-        <node TEXT="{name(.) || ' - ' || $foreach-target}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.) || ' - ' || $foreach-target}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
+            
             <xsl:apply-templates select="//target[@name = $foreach-target]"/>
         </node>
     </xsl:template>
     
     
     <xsl:template match="echo">
-        <node TEXT="{name(.)}" ID="{sg:generate-id(.)}">
+        <node
+            TEXT="{name(.)}"
+            ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
+            
             <richcontent TYPE="NOTE">
                 <html>
                     <head/>
