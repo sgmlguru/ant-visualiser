@@ -114,9 +114,11 @@
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.14">
                 <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
+                
                 <bookmarks>
                     <bookmark nodeId="{sg:generate-id(.)}" name="Root" opensAsRoot="true"/>
                 </bookmarks>
+                
                 <!-- Build file root -->
                 <node
                     TEXT="{$filename || ' - ' || @name}"
@@ -166,6 +168,7 @@
         </node>
     </xsl:template>
     
+    
     <xsl:template match="xmlproperty">
         <node
             TEXT="{name(.) || ' - ' || @file}"
@@ -175,15 +178,13 @@
             
             <!-- Get the unresolved properties, per xmlproperty file, and convert them to rich content -->
             <xsl:variable name="current" select="$base-path || @file"/>
+            
             <xsl:if test="doc-available($current)">
                 <xsl:variable name="xmlproperty-flattened">
                     <xsl:apply-templates select="doc($current)" mode="props"/>
                 </xsl:variable>
-                <xsl:apply-templates select="$xmlproperty-flattened" mode="annotated"/>
                 
-                <!--<debug>
-                    <xsl:copy-of select="$xmlproperty-flattened"/>
-                </debug>-->
+                <xsl:apply-templates select="$xmlproperty-flattened" mode="annotated"/>
             </xsl:if>
         </node>
     </xsl:template>
