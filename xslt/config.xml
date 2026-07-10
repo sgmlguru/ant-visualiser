@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <groups>
-        <group name="taskdef" components="taskdef" generic="false">
-            <colour value="#666600"/>
-        </group>
-        <group name="task-file-operations" components="copy copydir move mkdir loadresource loadfile">
+        <group name="task-file-operations" components="copy copydir move mkdir loadresource loadfile" preprocess="false">
             <colour value="#008000"/>
         </group>
-        <group name="task-fileset" components="fileset include exclude filelist path filterchain tokenfilter filetokenizer">
+        <group name="task-fileset" components="fileset include exclude filelist path filterchain tokenfilter filetokenizer" preprocess="false">
             <colour value="#228B22"/>
         </group>
-        <group name="task-string" components="replaceregexp propertyregex concat replacestring">
+        <group name="task-string" components="replaceregexp propertyregex concat replacestring" preprocess="false">
             <colour value="#f07d0a"/>
         </group>
-        <group name="task-exec" components="exec arg">
+        <group name="task-exec" components="exec arg" preprocess="false">
             <colour value="#2f72ad"/>
         </group>
-        <group name="local" components="local propertyresource">
+        <group name="local" components="local propertyresource" preprocess="false">
             <colour value="#2F4F4F"/>
         </group>
-        <group name="control" components="if isset equals then else condition not">
+        <group name="control" components="if foreach isset equals then else condition not" preprocess="false">
             <colour value="#B22222"/>
         </group>
-        <group name="admin" components="record">
+        <group name="admin" components="record" preprocess="false">
             <colour value="#1bcc35"/>
         </group>
-        <group name="import" components="import include" generic="false">
+        
+        
+        <!-- Preprocess -->
+        
+        <group name="taskdef" components="taskdef" preprocess="true">
+            <colour value="#666600"/>
+        </group>
+        <group name="import" components="import include" preprocess="true">
             <colour value="#678900"/>
         </group>
-        <group name="xmlproperty" components="xmlproperty" generic="false">
+        <group name="xmlproperty" components="xmlproperty" preprocess="true">
             <colour value="#3333ff"/>
         </group>
-        <group name="property" components="property" generic="false">
+        <group name="property" components="property" preprocess="true">
             <colour value="#999999"/>
         </group>
-        <group name="macro" components="macrodef" generic="false">
+        <group name="macro" components="macrodef" preprocess="true">
             <colour value="#f00707"/>
         </group>
     </groups>
