@@ -92,9 +92,31 @@
         <xsl:param name="config"/>
         <xsl:param name="name"/>
         
-        <xsl:value-of select="$config//group[@components 
-            => string-join(' ') 
-            => tokenize('\s+') = $name]/colour/@value"/>
+        <xsl:variable name="component-name">
+            <xsl:value-of select="$config//group[@components 
+                => string-join(' ') 
+                => tokenize('\s+') = $name]/colour/@value"/>
+        </xsl:variable>
+        
+        <xsl:variable name="group">
+            <xsl:value-of select="$config//group[@name 
+                => string-join(' ') 
+                => tokenize('\s+') = $name]/colour/@value"/>
+        </xsl:variable>
+        
+        <xsl:choose>
+            <!-- Individual component -->
+            <xsl:when test="$component-name != ''">
+                <xsl:value-of select="$component-name"/>
+            </xsl:when>
+            <!-- Only component group -->
+            <xsl:when test="$group">
+                <xsl:value-of select="$group"/>
+            </xsl:when>
+            <!-- No default -->
+            <xsl:otherwise/>
+        </xsl:choose>
+        
     </xsl:function>
     
     
