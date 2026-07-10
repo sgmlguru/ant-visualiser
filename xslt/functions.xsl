@@ -92,9 +92,64 @@
         <xsl:param name="config"/>
         <xsl:param name="name"/>
         
-        <xsl:value-of select="$config//group[@components 
-            => string-join(' ') 
-            => tokenize('\s+') = $name]/colour/@value"/>
+        <xsl:variable name="component-name">
+            <xsl:value-of select="$config//group[@components 
+                => string-join(' ') 
+                => tokenize('\s+') = $name]/colour/@value"/>
+        </xsl:variable>
+        
+        <xsl:variable name="group">
+            <xsl:value-of select="$config//group[@name 
+                => string-join(' ') 
+                => tokenize('\s+') = $name]/colour/@value"/>
+        </xsl:variable>
+        
+        <xsl:choose>
+            <!-- Individual component -->
+            <xsl:when test="$component-name != ''">
+                <xsl:value-of select="$component-name"/>
+            </xsl:when>
+            <!-- Only component group -->
+            <xsl:when test="$group">
+                <xsl:value-of select="$group"/>
+            </xsl:when>
+            <!-- No default -->
+            <xsl:otherwise/>
+        </xsl:choose>
+        
+    </xsl:function>
+    
+    
+    <xsl:function name="sg:find-macros" as="xs:string*">
+        <xsl:param name="file-paths" as="xs:string*"/>
+        <xsl:param name="visited-paths" as="xs:string*"/>
+        <xsl:param name="normalised" as="document-node()"/>
+        
+        <xsl:variable name="files-to-process" select="$file-paths[not(. = $visited-paths)]"/>
+        
+        <xsl:if test="exists($files-to-process)">
+            <xsl:variable name="current-file" select="$files-to-process[1]"/>
+            <xsl:variable name="doc" select="doc($current-file)"/>
+            <xsl:variable name="local-macros" select="$doc//macrodef/@name/string()"/>
+            
+            <xsl:variable name="next-files" as="xs:string*">
+                <xsl:for-each select="$doc//taskdef[@resource]">
+                    <xsl:if test="fn:doc-available(resolve-uri(sg:resolve-string(@resource, $normalised), $current-file))">
+                        <xsl:value-of select="resolve-uri(sg:resolve-string(@resource, $normalised), $current-file)"/>
+                    </xsl:if>
+                    
+                </xsl:for-each>
+                <xsl:for-each select="$doc//(include | import)[@file]">
+                    <xsl:if test="fn:doc-available(resolve-uri(sg:resolve-string(@file, $normalised), $current-file))">
+                        <xsl:value-of select="resolve-uri(sg:resolve-string(@file, $normalised), $current-file)"/>
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:variable>
+            
+            <xsl:sequence
+                select="$local-macros, 
+                sg:find-macros(($files-to-process[position() > 1], $next-files), ($visited-paths, $current-file), $normalised)"/>
+        </xsl:if>
     </xsl:function>
     
 </xsl:stylesheet>
