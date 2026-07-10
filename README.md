@@ -28,10 +28,14 @@ Currently, you're simply running an XSLT 3.0 stylesheet. If you have oXygen inst
 Most Ant elements are handled using a generic element match that looks like this:
 
 ```XML
-<!-- Generic tasks/components, as defined in config -->
+<!-- Tasks/components, as defined in config (not(@preprocess='true')) -->
 <xsl:template match="*[local-name() = $tasks]">
-    <node TEXT="{name(.)}" BACKGROUND_COLOR="{sg:get-colour($config, name(.))}" ID="{sg:generate-id(.)}">
+    <node
+        TEXT="{name(.)}"
+        BACKGROUND_COLOR="{sg:get-colour($config, name(.), false())}"
+        ID="{sg:generate-id(.)}">
         <xsl:sequence select="sg:created-modified()"/>
+        
         <xsl:call-template name="info"/>
         <xsl:apply-templates select="node()"/>
     </node>
@@ -44,7 +48,7 @@ Most Ant elements are handled using a generic element match that looks like this
 <!-- Sequence of task/component names -->
 <xsl:variable
     name="tasks" 
-    select="$config//group[not(@generic)]/@components 
+    select="$config//group[not(@preprocess='true')]/@components 
     => string-join(' ') 
     => tokenize('\s+')" />
 ```
@@ -55,44 +59,54 @@ Most Ant elements are handled using a generic element match that looks like this
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <groups>
-        <group name="taskdef" components="taskdef" generic="false">
-            <colour value="#666600"/>
-        </group>
-        <group name="task-file-operations" components="copy move mkdir loadresource loadfile">
+        <group name="task-file-operations" components="copy copydir move mkdir loadresource loadfile" preprocess="false">
             <colour value="#008000"/>
         </group>
-        <group name="task-fileset" components="fileset include exclude filelist path filterchain tokenfilter filetokenizer">
+        <group name="task-fileset" components="fileset include exclude filelist path filterchain tokenfilter filetokenizer" preprocess="false">
             <colour value="#228B22"/>
         </group>
-        <group name="task-string" components="replaceregexp propertyregex concat replacestring">
-            <colour value="#FFD700"/>
+        <group name="task-string" components="replaceregexp propertyregex concat replacestring" preprocess="false">
+            <colour value="#f07d0a"/>
         </group>
-        <group name="task-exec" components="exec arg">
-            <colour value="#000080"/>
+        <group name="task-exec" components="exec arg" preprocess="false">
+            <colour value="#2f72ad"/>
         </group>
-        <group name="local" components="local propertyresource">
+        <group name="local" components="local propertyresource" preprocess="false">
             <colour value="#2F4F4F"/>
         </group>
-        <group name="control" components="if isset equals then else condition not">
+        <group name="control" components="if foreach isset equals then else condition not" preprocess="false">
             <colour value="#B22222"/>
         </group>
-        <group name="admin" components="record">
-            <colour value="#D8BFD8"/>
+        <group name="admin" components="record" preprocess="false">
+            <colour value="#1bcc35"/>
         </group>
-        <group name="import" components="import" generic="false">
+        
+        
+        <!-- Preprocess -->
+        
+        <group name="taskdef" components="taskdef" preprocess="true">
+            <colour value="#666600"/>
+        </group>
+        <group name="import" components="import include" preprocess="true">
             <colour value="#678900"/>
         </group>
-        <group name="xmlproperty" components="xmlproperty" generic="false">
+        <group name="xmlproperty" components="xmlproperty" preprocess="true">
             <colour value="#3333ff"/>
         </group>
-        <group name="property" components="property" generic="false">
+        <group name="property" components="property" preprocess="true">
             <colour value="#999999"/>
+        </group>
+        <group name="macro" components="macrodef" preprocess="true">
+            <colour value="#f00707"/>
         </group>
     </groups>
 </config>
+
 ```
 
 This means that we can easily add to the matched elements by adding the element name(s) to the config's `group/@components` whitespace-separated lists. The groups are split into types depending on function, but currently there's no real science behind the approach.
+
+Note that the 'preprocessing tasks' will oftentimes be handled using separate templates and priorities.
 
 
 ## Bugs
