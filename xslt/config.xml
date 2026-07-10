@@ -4,7 +4,7 @@
         <group name="taskdef" components="taskdef" generic="false">
             <colour value="#666600"/>
         </group>
-        <group name="task-file-operations" components="copy move mkdir loadresource loadfile">
+        <group name="task-file-operations" components="copy copydir move mkdir loadresource loadfile">
             <colour value="#008000"/>
         </group>
         <group name="task-fileset" components="fileset include exclude filelist path filterchain tokenfilter filetokenizer">
