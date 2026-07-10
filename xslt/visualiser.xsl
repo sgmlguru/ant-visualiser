@@ -96,20 +96,21 @@
     </xsl:variable>
     
     
+    <!-- Get a list of macros -->
+    <xsl:variable name="all-macros">
+        <all-macros>
+            <xsl:for-each
+                select="distinct-values(sg:find-macros($base-uri, (), $normalised))">
+                <macro>
+                    <xsl:value-of select="."/>
+                </macro>
+            </xsl:for-each>
+        </all-macros>
+    </xsl:variable>
+    
+    
     <!-- Read root -->
-    <xsl:template match="/*">
-        <!-- Get a list of macros -->
-        <xsl:variable name="all-macros">
-            <all-macros>
-                <xsl:for-each
-                    select="distinct-values(sg:find-macros($base-uri, (), $normalised))">
-                    <macro>
-                        <xsl:value-of select="."/>
-                    </macro>
-                </xsl:for-each>
-            </all-macros>
-        </xsl:variable>
-        
+    <xsl:template match="/project">
         <!-- Convert to mind map -->
         <xsl:variable name="mm" as="element()">
             <map version="freeplane 1.12.14">
@@ -127,7 +128,7 @@
                     <!-- Style -->
                     <xsl:copy-of select="doc('../styles/dark-solarized.xml')/ext-style/*"/>
                     
-                    <xsl:apply-templates select=".//taskdef | .//include | .//import | .//xmlproperty | .//property | .//target">
+                    <xsl:apply-templates select="taskdef | include | import | xmlproperty | property | target">
                         <xsl:with-param name="context" select="." tunnel="yes"/>
                     </xsl:apply-templates>
                     
@@ -209,10 +210,10 @@
     </xsl:template>
     
     
-    <xsl:template match="import | include" priority="10">
+    <xsl:template match="(import | include)[not(ancestor::target)]" priority="10">
         <node
             TEXT="{name(.) || ' - ' || @file}"
-            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            BACKGROUND_COLOR="{sg:get-colour($config, 'import')}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
@@ -355,6 +356,20 @@
         <node
             TEXT="{name(.)}"
             BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            ID="{sg:generate-id(.)}">
+            <xsl:sequence select="sg:created-modified()"/>
+            
+            <xsl:call-template name="info"/>
+            <xsl:apply-templates select="node()"/>
+        </node>
+    </xsl:template>
+    
+    
+    <!-- Match macros -->
+    <xsl:template match="*[local-name() = $all-macros//macro/text()]">
+        <node
+            TEXT="{name(.)}"
+            BACKGROUND_COLOR="{sg:get-colour($config, 'macro')}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
