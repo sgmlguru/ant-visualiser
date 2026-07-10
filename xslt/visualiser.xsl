@@ -35,7 +35,7 @@
     <!-- Sequence of task/component names -->
     <xsl:variable
         name="tasks" 
-        select="$config//group[not(@generic)]/@components 
+        select="$config//group[not(@preprocess='true')]/@components 
         => string-join(' ') 
         => tokenize('\s+')" />
     
@@ -162,8 +162,8 @@
     
     <xsl:template match="property">
         <node
-            TEXT="{name(.) || ' - ' || @name || '=' || @value}"
-            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            TEXT="{name(.) || ' - ' || (if (@environment) then (@environment) else (@name || '=' || @value))}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.), true())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
         </node>
@@ -173,7 +173,7 @@
     <xsl:template match="xmlproperty">
         <node
             TEXT="{name(.) || ' - ' || @file}"
-            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.), true())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
@@ -194,7 +194,7 @@
     <xsl:template match="taskdef" priority="10">
         <node
             TEXT="{name(.) || ' - ' || @resource}"
-            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.), true())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
@@ -213,7 +213,7 @@
     <xsl:template match="(import | include)[not(ancestor::target)]" priority="10">
         <node
             TEXT="{name(.) || ' - ' || @file}"
-            BACKGROUND_COLOR="{sg:get-colour($config, 'import')}"
+            BACKGROUND_COLOR="{sg:get-colour($config, 'import', true())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
@@ -234,7 +234,7 @@
     <xsl:template match="macrodef" priority="10">
         <node
             TEXT="{name(.)} - {@name}"
-            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.), true())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
@@ -351,11 +351,11 @@
     </xsl:template>
     
     
-    <!-- Generic tasks/components, as defined in config -->
+    <!-- Tasks/components, as defined in config (not(@preprocess='true')) -->
     <xsl:template match="*[local-name() = $tasks]">
         <node
             TEXT="{name(.)}"
-            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.), false())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
@@ -369,7 +369,7 @@
     <xsl:template match="*[local-name() = $all-macros//macro/text()]">
         <node
             TEXT="{name(.)}"
-            BACKGROUND_COLOR="{sg:get-colour($config, 'macro')}"
+            BACKGROUND_COLOR="{sg:get-colour($config, 'macro', true())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             
@@ -405,12 +405,13 @@
     </xsl:template>
     
     
-    <xsl:template match="target/foreach">
+    <!-- Currently not a generic task, even though it's listed as such in the config; needs a priority for now -->
+    <xsl:template match="target/foreach" priority="10">
         <xsl:param name="target" tunnel="yes"/>
         <xsl:variable name="foreach-target" select="@target"/>
         <node
             TEXT="{name(.) || ' - ' || $foreach-target}"
-            BACKGROUND_COLOR="{sg:get-colour($config, name(.))}"
+            BACKGROUND_COLOR="{sg:get-colour($config, name(.), false())}"
             ID="{sg:generate-id(.)}">
             <xsl:sequence select="sg:created-modified()"/>
             

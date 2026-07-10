@@ -91,15 +91,20 @@
     <xsl:function name="sg:get-colour" as="xs:string">
         <xsl:param name="config"/>
         <xsl:param name="name"/>
+        <xsl:param name="preprocess" as="xs:boolean"/>
+        
+        <xsl:variable name="pre" select="if ($preprocess) then ('true') else ('false')"/>
         
         <xsl:variable name="component-name">
-            <xsl:value-of select="$config//group[@components 
+            <xsl:value-of select="$config//group[@preprocess = $pre and
+                @components 
                 => string-join(' ') 
                 => tokenize('\s+') = $name]/colour/@value"/>
         </xsl:variable>
         
         <xsl:variable name="group">
-            <xsl:value-of select="$config//group[@name 
+            <xsl:value-of select="$config//group[@preprocess = $pre and
+                @name 
                 => string-join(' ') 
                 => tokenize('\s+') = $name]/colour/@value"/>
         </xsl:variable>
