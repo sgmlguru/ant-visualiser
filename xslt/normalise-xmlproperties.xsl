@@ -100,9 +100,9 @@
                             <!-- @path needs to have a value, otherwise it's an artefact
                                  from local property handling -->
                             
-                            <xsl:if test="@path = ''">
+                            <!--<xsl:if test="@path = ''">
                                 <xsl:message>Empty @path, @value="{@value}", @done="{@done}"</xsl:message>
-                            </xsl:if>
+                            </xsl:if>-->
                             
                             <xsl:if test="@path != ''">
                                 <xsl:copy>

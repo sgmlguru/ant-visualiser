@@ -113,12 +113,12 @@
     <xsl:template match="/project">
         <!-- Convert to mind map -->
         <xsl:variable name="mm" as="element()">
-            <map version="freeplane 1.12.14">
+            <map version="freeplane 1.12.1">
                 <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
                 
-                <bookmarks>
+                <!--<bookmarks>
                     <bookmark nodeId="{sg:generate-id(.)}" name="Root" opensAsRoot="true"/>
-                </bookmarks>
+                </bookmarks>-->
                 
                 <!-- Build file root -->
                 <node
@@ -136,7 +136,8 @@
                     <node
                         TEXT="Properties"
                         POSITION="top_or_left"
-                        ID="{sg:generate-id(.)}">
+                        ID="{sg:generate-id(.) || '_properties'}">
+                        <xsl:sequence select="sg:created-modified()"/>
                         
                         <xsl:apply-templates select="$normalised" mode="annotated"/>
                         
@@ -203,7 +204,9 @@
                     <xsl:apply-templates select="doc(sg:resolve-string(@resource, $normalised))/*/*"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <node TEXT="{sg:resolve-string(@resource, $normalised)}"/>
+                    <node TEXT="{sg:resolve-string(@resource, $normalised)}" ID="{sg:generate-id(.)}-taskdef">
+                        <xsl:sequence select="sg:created-modified()"/>
+                    </node>
                 </xsl:otherwise>
             </xsl:choose>
         </node>

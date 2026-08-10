@@ -83,8 +83,9 @@
     
     
     <xsl:function name="sg:created-modified" as="attribute()+">
-        <xsl:attribute name="CREATED" select="floor((current-dateTime() - xs:dateTime('1970-01-01T00:00:00Z')) div xs:dayTimeDuration('PT0.001S'))"/>
-        <xsl:attribute name="MODIFIED" select="floor((current-dateTime() - xs:dateTime('1970-01-01T00:00:00Z')) div xs:dayTimeDuration('PT0.001S')) + 1000"/>
+        <xsl:variable name="now" select="xs:integer(floor((current-dateTime() - xs:dateTime('1970-01-01T00:00:00Z')) div xs:dayTimeDuration('PT0.001S')))"/>
+        <xsl:attribute name="CREATED" select="$now"/>
+        <xsl:attribute name="MODIFIED" select="$now + 10000"/>
     </xsl:function>
     
     
