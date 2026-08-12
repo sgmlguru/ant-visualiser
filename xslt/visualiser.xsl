@@ -116,9 +116,9 @@
             <map version="freeplane 1.12.1">
                 <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
                 
-                <!--<bookmarks>
+                <bookmarks>
                     <bookmark nodeId="{sg:generate-id(.)}" name="Root" opensAsRoot="true"/>
-                </bookmarks>-->
+                </bookmarks>
                 
                 <!-- Build file root -->
                 <node
