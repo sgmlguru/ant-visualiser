@@ -113,7 +113,7 @@
     <xsl:template match="/project">
         <!-- Convert to mind map -->
         <xsl:variable name="mm" as="element()">
-            <map version="freeplane 1.12.1">
+            <map version="freeplane 1.12.15">
                 <xsl:comment>To view this file, download free mind mapping software Freeplane from https://www.freeplane.org</xsl:comment>
                 
                 <bookmarks>
