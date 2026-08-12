@@ -9,7 +9,7 @@
     exclude-result-prefixes="#all"
     version="3.0">
     
-    <xsl:output method="xml" indent="yes" omit-xml-declaration="no"/>
+    <xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
     
     <!-- Functions -->
     <xsl:import href="functions.xsl"/>
