@@ -78,7 +78,7 @@
     
     <xsl:function name="sg:generate-id" as="xs:string">
         <xsl:param name="context"/>
-        <xsl:value-of select="'ID_' || fn:generate-id($context)"/>
+        <xsl:value-of select="'ID_' || fn:string-to-codepoints(fn:generate-id($context)) => string-join()"/>
     </xsl:function>
     
     
